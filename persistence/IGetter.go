@@ -1,16 +1,18 @@
 package persistence
 
-/*
-  Interface for data processing components that can get data items.
-*/
-// <T extends IIdentifiable<K>, K>
-type IGetter interface {
+import "context"
 
-	//  Gets a data items by its unique id.
-	//  Parameters:
-	//    - correlation_id    (optional) transaction id to trace execution through call chain.
-	//    - id                an id of item to be retrieved.
-	//  Return interface{}, error
-	// item or error
-	GetOneById(correlation_id string, id interface{}) (item interface{}, err error)
+// IGetter Interface for data processing components that can get data items.
+//	Typed params:
+//		- T any type of getting element
+//		- K comparable type of id (key)
+type IGetter[T IDataObject[T, K], K any] interface {
+
+	// GetOneById a data items by its unique id.
+	//	Parameters:
+	//		- ctx context.Context
+	//		- correlationId (optional) transaction id to trace execution through call chain.
+	//		- id an id of item to be retrieved.
+	//	Returns: T, error item or error
+	GetOneById(ctx context.Context, correlationId string, id K) (item T, err error)
 }

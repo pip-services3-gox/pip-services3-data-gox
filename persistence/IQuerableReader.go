@@ -1,21 +1,22 @@
 package persistence
 
-import "github.com/pip-services3-go/pip-services3-commons-go/data"
+import (
+	"context"
+	"github.com/pip-services3-gox/pip-services3-commons-gox/data"
+)
 
-/*
-  Interface for data processing components that can query a list of data items.
-*/
-type IQuerableReader interface {
+// IQuerableReader interface for data processing components that can query a list of data items.
+//	Typed params:
+//		- T any type of getting element
+type IQuerableReader[T data.ICloneable[T]] interface {
 
-	//  Gets a list of data items using a query string.
-	//  Prameters:
-	//   - correlation_id  string
-	//   transaction id to trace execution through call chain.
-	//   - query string
-	//   a query string
-	//   - sort data.SortParams
-	//   sort parameters
-	// Returns []interface{}, error
-	// list of items or error.
-	GetListByQuery(correlation_id string, query string, sort *data.SortParams) (items []interface{}, err error)
+	// GetListByQuery gets a list of data items using a query string.
+	//	Parameters:
+	//		- ctx context.Context
+	//		- correlationId  string transaction id to trace execution through call chain.
+	//		- query string a query string
+	//		- sort data.SortParams sort parameters
+	// Returns []T, error list of items or error.
+	GetListByQuery(ctx context.Context, correlationId string,
+		query string, sort data.SortParams) (items []T, err error)
 }

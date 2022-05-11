@@ -1,15 +1,16 @@
 package persistence
 
-/*
-  Interface for data processing components that load data items.
-*/
-type ILoader interface {
+import "context"
 
-	// Loads data items.
-	// Parameters:
-	//   - correlation_id string
-	//   transaction id to trace execution through call chain.
-	// Retruns []interface{}, error
-	// a list of data items or error.
-	Load(correlation_id string) (items []interface{}, err error)
+// ILoader interface for data processing components that load data items.
+//	Typed params:
+//		- T any type of getting element
+type ILoader[T any] interface {
+
+	// Load data items.
+	//	Parameters:
+	//		- ctx context.Context
+	//		- correlationId string transaction id to trace execution through call chain.
+	//	Returns: []T, error a list of data items or error.
+	Load(ctx context.Context, correlationId string) (items []T, err error)
 }

@@ -1,12 +1,12 @@
 package persistence
 
 import (
+	"context"
+	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
+	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
+	refl "github.com/pip-services3-gox/pip-services3-commons-gox/reflect"
+	"github.com/pip-services3-gox/pip-services3-components-gox/log"
 	"reflect"
-
-	"github.com/pip-services3-go/pip-services3-commons-go/config"
-	cdata "github.com/pip-services3-go/pip-services3-commons-go/data"
-	refl "github.com/pip-services3-go/pip-services3-commons-go/reflect"
-	"github.com/pip-services3-go/pip-services3-components-go/log"
 )
 
 /*
@@ -75,9 +75,11 @@ Configuration parameters
 
 */
 // extends MemoryPersistence  implements IConfigurable, IWriter, IGetter, ISetter
-type IdentifiableMemoryPersistence struct {
-	MemoryPersistence
+type IdentifiableMemoryPersistence[T IDataObject[T, K], K any] struct {
+	MemoryPersistence[T]
 }
+
+const IdentifiableMemoryPersistenceConfigParamOptionsMaxPageSize = "options.max_page_size"
 
 // Creates a new empty instance of the persistence.
 // Parameters:
@@ -85,9 +87,10 @@ type IdentifiableMemoryPersistence struct {
 //  data type of contains items
 // Return * IdentifiableMemoryPersistence
 // created empty IdentifiableMemoryPersistence
-func NewIdentifiableMemoryPersistence(prototype reflect.Type) (c *IdentifiableMemoryPersistence) {
-	c = &IdentifiableMemoryPersistence{}
-	c.MemoryPersistence = *NewMemoryPersistence(prototype)
+func NewIdentifiableMemoryPersistence[T IDataObject[T, K], K any]() (c *IdentifiableMemoryPersistence[T, K]) {
+	c = &IdentifiableMemoryPersistence[T, K]{
+		MemoryPersistence: *NewMemoryPersistence[T](),
+	}
 	c.Logger = log.NewCompositeLogger()
 	c.MaxPageSize = 100
 	return c
@@ -97,8 +100,8 @@ func NewIdentifiableMemoryPersistence(prototype reflect.Type) (c *IdentifiableMe
 // Parameters:
 //  - config  *config.ConfigParams
 //  configuration parameters to be set.
-func (c *IdentifiableMemoryPersistence) Configure(config *config.ConfigParams) {
-	c.MaxPageSize = config.GetAsIntegerWithDefault("options.max_page_size", c.MaxPageSize)
+func (c *IdentifiableMemoryPersistence[T, K]) Configure(ctx context.Context, config *config.ConfigParams) {
+	c.MaxPageSize = config.GetAsIntegerWithDefault(IdentifiableMemoryPersistenceConfigParamOptionsMaxPageSize, c.MaxPageSize)
 }
 
 // Gets a list of data items retrieved by given unique ids.
@@ -109,20 +112,20 @@ func (c *IdentifiableMemoryPersistence) Configure(config *config.ConfigParams) {
 //   ids of data items to be retrieved
 // Returns  []interface{}, error
 // data list or error.
-func (c *IdentifiableMemoryPersistence) GetListByIds(correlationId string, ids []interface{}) (result []interface{}, err error) {
-	filter := func(item interface{}) bool {
+func (c *IdentifiableMemoryPersistence[T, K]) GetListByIds(ctx context.Context, correlationId string,
+	ids []K) ([]T, error) {
+
+	filter := func(item T) bool {
 		exist := false
-		id := GetObjectId(item)
-		for _, v := range ids {
-			vId := refl.ObjectReader.GetValue(v)
-			if CompareValues(id, vId) {
+		for _, id := range ids {
+			if item.IsEqualId(id) {
 				exist = true
 				break
 			}
 		}
 		return exist
 	}
-	return c.GetListByFilter(correlationId, filter, nil, nil)
+	return c.GetListByFilter(ctx, correlationId, filter, nil, nil)
 }
 
 // Gets a data item by its unique id.
@@ -133,87 +136,83 @@ func (c *IdentifiableMemoryPersistence) GetListByIds(correlationId string, ids [
 //   an id of data item to be retrieved.
 // Returns:  interface{}, error
 // data item or error.
-func (c *IdentifiableMemoryPersistence) GetOneById(correlationId string, id interface{}) (result interface{}, err error) {
+func (c *IdentifiableMemoryPersistence[T, K]) GetOneById(ctx context.Context, correlationId string, id K) (T, error) {
+
 	c.Lock.RLock()
 	defer c.Lock.RUnlock()
 
-	var items []interface{}
-	for _, v := range c.Items {
-		vId := GetObjectId(v)
-		if CompareValues(vId, id) {
-			items = append(items, v)
+	for _, item := range c.Items {
+		if item.IsEqualId(id) {
+			c.Logger.Trace(ctx, correlationId, "Retrieved item %s", id)
+			return item.Clone(), nil
 		}
 	}
 
-	var item interface{} = nil
-	if len(items) > 0 {
-		//item = CloneObject(items[0])
-		item = CloneObjectForResult(items[0], c.Prototype)
-	}
-	if item != nil {
-		c.Logger.Trace(correlationId, "Retrieved item %s", id)
-	} else {
-		c.Logger.Trace(correlationId, "Cannot find item by %s", id)
-	}
-	return item, err
+	c.Logger.Trace(ctx, correlationId, "Cannot find item by %s", id)
+
+	var defaultObject T
+	return defaultObject, nil
 }
 
 // Get index by "Id" field
 // return index number
-func (c *IdentifiableMemoryPersistence) GetIndexById(id interface{}) int {
-	var index int = -1
-	for i, v := range c.Items {
-		vId := GetObjectId(v)
-		if CompareValues(vId, id) {
-			index = i
-			break
+func (c *IdentifiableMemoryPersistence[T, K]) GetIndexById(id K) int {
+	c.Lock.RLock()
+	defer c.Lock.RUnlock()
+
+	for i, item := range c.Items {
+		if item.IsEqualId(id) {
+			return i
 		}
 	}
-	return index
+	return -1
 }
 
 // Creates a data item.
 // Returns:
-//   - correlation_id string
+//   - correlationId string
 //   (optional) transaction id to trace execution through call chain.
 //   - item  string
 //   an item to be created.
 // Returns:  interface{}, error
 // created item or error.
-func (c *IdentifiableMemoryPersistence) Create(correlationId string, item interface{}) (result interface{}, err error) {
+func (c *IdentifiableMemoryPersistence[T, K]) Create(ctx context.Context, correlationId string, item T) (T, error) {
 	c.Lock.Lock()
 
-	newItem := CloneObject(item)
-	GenerateObjectId(&newItem)
-	id := GetObjectId(newItem)
+	newItem := item.Clone()
+	if newItem.IsZeroId() {
+		newItem = newItem.WithGeneratedId()
+	}
 	c.Items = append(c.Items, newItem)
 
 	c.Lock.Unlock()
-	c.Logger.Trace(correlationId, "Created item %s", id)
+	c.Logger.Trace(ctx, correlationId, "Created item %s", newItem.GetId())
 
-	errsave := c.Save(correlationId)
-	result = CloneObjectForResult(newItem, c.Prototype)
+	if err := c.Save(ctx, correlationId); err != nil {
+		return newItem.Clone(), err
+	}
 
-	return result, errsave
+	return newItem.Clone(), nil
 }
 
 // Sets a data item. If the data item exists it updates it,
 // otherwise it create a new data item.
 // Parameters:
-//   - correlation_id string
+//   - correlationId string
 //   (optional) transaction id to trace execution through call chain.
 //   - item  interface{}
 //   a item to be set.
 // Returns:  interface{}, error
 // updated item or error.
-func (c *IdentifiableMemoryPersistence) Set(correlationId string, item interface{}) (result interface{}, err error) {
+func (c *IdentifiableMemoryPersistence[T, K]) Set(ctx context.Context, correlationId string, item T) (T, error) {
+	newItem := item.Clone()
+	if newItem.IsZeroId() {
+		newItem = newItem.WithGeneratedId()
+	}
+
+	index := c.GetIndexById(item.GetId())
+
 	c.Lock.Lock()
-
-	newItem := CloneObject(item)
-	GenerateObjectId(&newItem)
-
-	id := GetObjectId(item)
-	index := c.GetIndexById(id)
 	if index < 0 {
 		c.Items = append(c.Items, newItem)
 	} else {
@@ -221,46 +220,49 @@ func (c *IdentifiableMemoryPersistence) Set(correlationId string, item interface
 	}
 
 	c.Lock.Unlock()
-	c.Logger.Trace(correlationId, "Set item %s", id)
+	c.Logger.Trace(ctx, correlationId, "Set item %s", newItem.GetId())
 
-	errsav := c.Save(correlationId)
-	//result = CloneObject(newItem)
-	result = CloneObjectForResult(newItem, c.Prototype)
-	return result, errsav
+	if err := c.Save(ctx, correlationId); err != nil {
+		return newItem.Clone(), err
+	}
+
+	return newItem.Clone(), nil
 }
 
 // Updates a data item.
 // Parameters:
-//   - correlation_id string
+//   - correlationId string
 //   (optional) transaction id to trace execution through call chain.
 //   - item  interface{}
 //   an item to be updated.
 // Returns:   interface{}, error
 // updated item or error.
-func (c *IdentifiableMemoryPersistence) Update(correlationId string, item interface{}) (result interface{}, err error) {
-	c.Lock.Lock()
+func (c *IdentifiableMemoryPersistence[T, K]) Update(ctx context.Context, correlationId string, item T) (T, error) {
+	var defaultObject T
 
-	id := GetObjectId(item)
-	index := c.GetIndexById(id)
+	index := c.GetIndexById(item.GetId())
 	if index < 0 {
-		c.Logger.Trace(correlationId, "Item %s was not found", id)
-		return nil, nil
+		c.Logger.Trace(ctx, correlationId, "Item %s was not found", item.GetId())
+		return defaultObject, nil
 	}
-	newItem := CloneObject(item)
+	newItem := item.Clone()
+
+	c.Lock.Lock()
 	c.Items[index] = newItem
-
 	c.Lock.Unlock()
-	c.Logger.Trace(correlationId, "Updated item %s", id)
 
-	errsave := c.Save(correlationId)
-	//result = CloneObject(newItem)
-	result = CloneObjectForResult(newItem, c.Prototype)
-	return result, errsave
+	c.Logger.Trace(ctx, correlationId, "Updated item %s", item.GetId())
+
+	if err := c.Save(ctx, correlationId); err != nil {
+		return newItem.Clone(), err
+	}
+
+	return newItem.Clone(), nil
 }
 
 // Updates only few selectFuncected fields in a data item.
 // Parameters:
-//   - correlation_id string
+//   - correlationId string
 //   (optional) transaction id to trace execution through call chain.
 //   - id interface{}
 //   an id of data item to be updated.
@@ -268,57 +270,69 @@ func (c *IdentifiableMemoryPersistence) Update(correlationId string, item interf
 //   a map with fields to be updated.
 // Returns: interface{}, error
 // updated item or error.
-func (c *IdentifiableMemoryPersistence) UpdatePartially(correlationId string, id interface{}, data *cdata.AnyValueMap) (result interface{}, err error) {
-	c.Lock.Lock()
+func (c *IdentifiableMemoryPersistence[T, K]) UpdatePartially(ctx context.Context, correlationId string,
+	id K, data cdata.AnyValueMap) (T, error) {
+
+	var defaultObject T
 
 	index := c.GetIndexById(id)
 	if index < 0 {
-		c.Logger.Trace(correlationId, "Item %s was not found", id)
-		return nil, nil
+		c.Logger.Trace(ctx, correlationId, "Item %s was not found", id)
+		return defaultObject, nil
 	}
 
-	newItem := CloneObject(c.Items[index])
+	c.Lock.Lock()
+
+	newItem := c.Items[index].Clone()
 
 	if reflect.ValueOf(newItem).Kind() == reflect.Map {
 		refl.ObjectWriter.SetProperties(newItem, data.Value())
 	} else {
-		objPointer := reflect.New(reflect.TypeOf(newItem))
-		objPointer.Elem().Set(reflect.ValueOf(newItem))
-		intPointer := objPointer.Interface()
+		var intPointer any = newItem
+		if reflect.TypeOf(newItem).Kind() != reflect.Pointer {
+			objPointer := reflect.New(reflect.TypeOf(newItem))
+			objPointer.Elem().Set(reflect.ValueOf(newItem))
+			intPointer = objPointer.Interface()
+		}
 		refl.ObjectWriter.SetProperties(intPointer, data.Value())
-		newItem = reflect.ValueOf(intPointer).Elem().Interface()
+		if _newItem, ok := reflect.ValueOf(intPointer).Elem().Interface().(T); ok {
+			newItem = _newItem
+		}
 	}
 
 	c.Items[index] = newItem
 
 	c.Lock.Unlock()
-	c.Logger.Trace(correlationId, "Partially updated item %s", id)
+	c.Logger.Trace(ctx, correlationId, "Partially updated item %s", id)
 
-	errsave := c.Save(correlationId)
-	//result = CloneObject(newItem)
-	result = CloneObjectForResult(newItem, c.Prototype)
-	return result, errsave
+	if err := c.Save(ctx, correlationId); err != nil {
+		return newItem.Clone(), err
+	}
+
+	return newItem.Clone(), nil
 }
 
 // Deleted a data item by it's unique id.
 // Parameters:
-//   - correlation_id string
+//   - correlationId string
 //   (optional) transaction id to trace execution through call chain.
 //   - id interface{}
 //   an id of the item to be deleted
 // Retruns:  interface{}, error
 // deleted item or error.
-func (c *IdentifiableMemoryPersistence) DeleteById(correlationId string, id interface{}) (result interface{}, err error) {
-	c.Lock.Lock()
+func (c *IdentifiableMemoryPersistence[T, K]) DeleteById(ctx context.Context, correlationId string, id K) (T, error) {
+
+	var defaultObject T
 
 	index := c.GetIndexById(id)
 	if index < 0 {
-		c.Logger.Trace(correlationId, "Item %s was not found", id)
-		return nil, nil
+		c.Logger.Trace(ctx, correlationId, "Item %s was not found", id)
+		return defaultObject, nil
 	}
 
-	oldItem := c.Items[index]
+	c.Lock.Lock()
 
+	oldItem := c.Items[index]
 	if index == len(c.Items) {
 		c.Items = c.Items[:index-1]
 	} else {
@@ -326,12 +340,13 @@ func (c *IdentifiableMemoryPersistence) DeleteById(correlationId string, id inte
 	}
 
 	c.Lock.Unlock()
-	c.Logger.Trace(correlationId, "Deleted item by %s", id)
 
-	errsave := c.Save(correlationId)
-	//result = CloneObject(oldItem)
-	result = CloneObjectForResult(oldItem, c.Prototype)
-	return result, errsave
+	c.Logger.Trace(ctx, correlationId, "Deleted item by %s", id)
+
+	if err := c.Save(ctx, correlationId); err != nil {
+		return oldItem, err
+	}
+	return oldItem, nil
 }
 
 // Deletes multiple data items by their unique ids.
@@ -342,18 +357,15 @@ func (c *IdentifiableMemoryPersistence) DeleteById(correlationId string, id inte
 //   ids of data items to be deleted.
 // Returns: error
 // error or null for success.
-func (c *IdentifiableMemoryPersistence) DeleteByIds(correlationId string, ids []interface{}) (err error) {
-	filterFunc := func(item interface{}) bool {
-		exist := false
-		itemId := GetObjectId(item)
-		for _, v := range ids {
-			if CompareValues(v, itemId) {
-				exist = true
-				break
+func (c *IdentifiableMemoryPersistence[T, K]) DeleteByIds(ctx context.Context, correlationId string, ids []K) error {
+	filterFunc := func(item T) bool {
+		for _, id := range ids {
+			if item.IsEqualId(id) {
+				return true
 			}
 		}
-		return exist
+		return false
 	}
 
-	return c.DeleteByFilter(correlationId, filterFunc)
+	return c.DeleteByFilter(ctx, correlationId, filterFunc)
 }

@@ -1,18 +1,19 @@
 package persistence
 
-/*
-  Interface for data processing components that can set (create or update) data items.
-*/
-type ISetter interface {
+import "context"
 
-	// Sets a data item. If the data item exists it updates it,
+// ISetter interface for data processing components that can set (create or update) data items.
+//	Typed params:
+//		- T any type of getting element
+//		- K comparable type of id (key)
+type ISetter[T IDataObject[T, K], K any] interface {
+
+	// Set a data item. If the data item exists it updates it,
 	// otherwise it create a new data item.
-	// Parameters:
-	//   - correlation_id string
-	//   transaction id to trace execution through call chain.
-	//   - item  interface{}
-	//   a item to be set.
-	// Retruns interface{}, error
-	// updated item or error.
-	Set(correlation_id string, item interface{}) (value interface{}, err error)
+	//	Parameters:
+	//		- ctx context.Context
+	//		- correlationId string transaction id to trace execution through call chain.
+	//		- item T is an item to be set.
+	//	Returns: T, error updated item or error.
+	Set(ctx context.Context, correlationId string, item T) (value T, err error)
 }

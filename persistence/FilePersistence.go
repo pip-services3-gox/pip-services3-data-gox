@@ -1,9 +1,9 @@
 package persistence
 
 import (
-	"reflect"
-
-	"github.com/pip-services3-go/pip-services3-commons-go/config"
+	"context"
+	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
+	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
 
 /*
@@ -57,21 +57,20 @@ Example
   }
 */
 //extends MemoryPersistence implements IConfigurable
-type FilePersistence struct {
-	MemoryPersistence
-	Persister *JsonFilePersister
+type FilePersistence[T cdata.ICloneable[T]] struct {
+	MemoryPersistence[T]
+	Persister *JsonFilePersister[T]
 }
 
 // Creates a new instance of the persistence.
 //  - persister    (optional) a persister component that loads and saves data from/to flat file.
 // Return *FilePersistence
 // Pointer on new FilePersistence instance
-func NewFilePersistence(prototype reflect.Type, persister *JsonFilePersister) *FilePersistence {
-	c := &FilePersistence{}
-	c.MemoryPersistence = *NewMemoryPersistence(prototype)
-	c.Prototype = prototype
+func NewFilePersistence[T cdata.ICloneable[T]](persister *JsonFilePersister[T]) *FilePersistence[T] {
+	c := &FilePersistence[T]{}
+	c.MemoryPersistence = *NewMemoryPersistence[T]()
 	if persister == nil {
-		persister = NewJsonFilePersister(prototype, "")
+		persister = NewJsonFilePersister[T]("")
 	}
 	c.Loader = persister
 	c.Saver = persister
@@ -81,6 +80,6 @@ func NewFilePersistence(prototype reflect.Type, persister *JsonFilePersister) *F
 
 // Configures component by passing configuration parameters.
 //  - config    configuration parameters to be set.
-func (c *FilePersistence) Configure(conf *config.ConfigParams) {
-	c.Persister.Configure(conf)
+func (c *FilePersistence[T]) Configure(ctx context.Context, conf *config.ConfigParams) {
+	c.Persister.Configure(ctx, conf)
 }

@@ -1,31 +1,32 @@
 package test_persistence
 
 import (
+	"context"
 	"testing"
 
-	cdata "github.com/pip-services3-go/pip-services3-commons-go/data"
+	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 	"github.com/stretchr/testify/assert"
 )
 
 type DummyRefPersistenceFixture struct {
-	dummy1      *Dummy
-	dummy2      *Dummy
+	dummy1      *DummyRef
+	dummy2      *DummyRef
 	persistence IDummyRefPersistence
 }
 
 func NewDummyRefPersistenceFixture(persistence IDummyRefPersistence) *DummyRefPersistenceFixture {
 	c := DummyRefPersistenceFixture{}
-	c.dummy1 = &Dummy{Id: "", Key: "Key 11", Content: "Content 1"}
-	c.dummy2 = &Dummy{Id: "", Key: "Key 2", Content: "Content 2"}
+	c.dummy1 = &DummyRef{Id: "", Key: "Key 11", Content: "Content 1"}
+	c.dummy2 = &DummyRef{Id: "", Key: "Key 2", Content: "Content 2"}
 	c.persistence = persistence
 	return &c
 }
 
 func (c *DummyRefPersistenceFixture) TestCrudOperations(t *testing.T) {
-	var dummy1 Dummy
-	var dummy2 Dummy
+	var dummy1 DummyRef
+	var dummy2 DummyRef
 
-	result, err := c.persistence.Create("", c.dummy1)
+	result, err := c.persistence.Create(context.Background(), "", c.dummy1)
 	if err != nil {
 		t.Errorf("Create method error %v", err)
 	}
@@ -36,7 +37,7 @@ func (c *DummyRefPersistenceFixture) TestCrudOperations(t *testing.T) {
 	assert.Equal(t, c.dummy1.Content, dummy1.Content)
 
 	// Create another dummy by send pointer
-	result, err = c.persistence.Create("", c.dummy2)
+	result, err = c.persistence.Create(context.Background(), "", c.dummy2)
 	if err != nil {
 		t.Errorf("Create method error %v", err)
 	}
@@ -46,27 +47,27 @@ func (c *DummyRefPersistenceFixture) TestCrudOperations(t *testing.T) {
 	assert.Equal(t, c.dummy2.Key, dummy2.Key)
 	assert.Equal(t, c.dummy2.Content, dummy2.Content)
 
-	page, errp := c.persistence.GetPageByFilter("", cdata.NewEmptyFilterParams(), cdata.NewEmptyPagingParams())
+	page, errp := c.persistence.GetPageByFilter(context.Background(), "", *cdata.NewEmptyFilterParams(), *cdata.NewEmptyPagingParams())
 	if errp != nil {
 		t.Errorf("GetPageByFilter method error %v", err)
 	}
 	assert.NotNil(t, page)
-	assert.Len(t, page.Data, 2)
+	_data, ok := page.Data()
+	assert.True(t, ok)
+	assert.Len(t, _data, 2)
 	//Testing default sorting by Key field len
 
-	item1 := page.Data[0]
-	assert.Equal(t, item1.Key, dummy2.Key)
-	item2 := page.Data[1]
-	assert.Equal(t, item2.Key, dummy1.Key)
+	assert.Equal(t, _data[0].Key, dummy2.Key)
+	assert.Equal(t, _data[1].Key, dummy1.Key)
 
 	// Get count
-	count, errc := c.persistence.GetCountByFilter("", cdata.NewEmptyFilterParams())
+	count, errc := c.persistence.GetCountByFilter(context.Background(), "", *cdata.NewEmptyFilterParams())
 	assert.Nil(t, errc)
 	assert.Equal(t, count, int64(2))
 
 	// Update the dummy
 	dummy1.Content = "Updated Content 1"
-	result, err = c.persistence.Update("", &dummy1)
+	result, err = c.persistence.Update(context.Background(), "", &dummy1)
 	if err != nil {
 		t.Errorf("GetPageByFilter method error %v", err)
 	}
@@ -77,7 +78,7 @@ func (c *DummyRefPersistenceFixture) TestCrudOperations(t *testing.T) {
 
 	// Partially update the dummy
 	updateMap := cdata.NewAnyValueMapFromTuples("Content", "Partially Updated Content 1")
-	result, err = c.persistence.UpdatePartially("", dummy1.Id, updateMap)
+	result, err = c.persistence.UpdatePartially(context.Background(), "", dummy1.Id, *updateMap)
 	if err != nil {
 		t.Errorf("UpdatePartially method error %v", err)
 	}
@@ -87,7 +88,7 @@ func (c *DummyRefPersistenceFixture) TestCrudOperations(t *testing.T) {
 	assert.Equal(t, "Partially Updated Content 1", result.Content)
 
 	// Get the dummy by Id
-	result, err = c.persistence.GetOneById("", dummy1.Id)
+	result, err = c.persistence.GetOneById(context.Background(), "", dummy1.Id)
 	if err != nil {
 		t.Errorf("GetOneById method error %v", err)
 	}
@@ -98,7 +99,7 @@ func (c *DummyRefPersistenceFixture) TestCrudOperations(t *testing.T) {
 	assert.Equal(t, "Partially Updated Content 1", result.Content)
 
 	// Delete the dummy
-	result, err = c.persistence.DeleteById("", dummy1.Id)
+	result, err = c.persistence.DeleteById(context.Background(), "", dummy1.Id)
 	if err != nil {
 		t.Errorf("DeleteById method error %v", err)
 	}
@@ -108,7 +109,7 @@ func (c *DummyRefPersistenceFixture) TestCrudOperations(t *testing.T) {
 	assert.Equal(t, "Partially Updated Content 1", result.Content)
 
 	// Get the deleted dummy
-	result, err = c.persistence.GetOneById("", dummy1.Id)
+	result, err = c.persistence.GetOneById(context.Background(), "", dummy1.Id)
 	if err != nil {
 		t.Errorf("GetOneById method error %v", err)
 	}
@@ -117,11 +118,11 @@ func (c *DummyRefPersistenceFixture) TestCrudOperations(t *testing.T) {
 }
 
 func (c *DummyRefPersistenceFixture) TestBatchOperations(t *testing.T) {
-	var dummy1 Dummy
-	var dummy2 Dummy
+	var dummy1 DummyRef
+	var dummy2 DummyRef
 
 	// Create one dummy
-	result, err := c.persistence.Create("", c.dummy1)
+	result, err := c.persistence.Create(context.Background(), "", c.dummy1)
 	if err != nil {
 		t.Errorf("Create method error %v", err)
 	}
@@ -132,7 +133,7 @@ func (c *DummyRefPersistenceFixture) TestBatchOperations(t *testing.T) {
 	assert.Equal(t, c.dummy1.Content, dummy1.Content)
 
 	// Create another dummy
-	result, err = c.persistence.Create("", c.dummy2)
+	result, err = c.persistence.Create(context.Background(), "", c.dummy2)
 	if err != nil {
 		t.Errorf("Create method error %v", err)
 	}
@@ -143,7 +144,7 @@ func (c *DummyRefPersistenceFixture) TestBatchOperations(t *testing.T) {
 	assert.Equal(t, c.dummy2.Content, dummy2.Content)
 
 	// Read batch
-	items, err := c.persistence.GetListByIds("", []string{dummy1.Id, dummy2.Id})
+	items, err := c.persistence.GetListByIds(context.Background(), "", []string{dummy1.Id, dummy2.Id})
 	if err != nil {
 		t.Errorf("GetListByIds method error %v", err)
 	}
@@ -152,18 +153,18 @@ func (c *DummyRefPersistenceFixture) TestBatchOperations(t *testing.T) {
 	assert.Len(t, items, 2)
 
 	// Delete batch
-	err = c.persistence.DeleteByIds("", []string{dummy1.Id, dummy2.Id})
+	err = c.persistence.DeleteByIds(context.Background(), "", []string{dummy1.Id, dummy2.Id})
 	if err != nil {
 		t.Errorf("DeleteByIds method error %v", err)
 	}
 	assert.Nil(t, err)
 
 	// Read empty batch
-	items, err = c.persistence.GetListByIds("", []string{dummy1.Id, dummy2.Id})
+	items, err = c.persistence.GetListByIds(context.Background(), "", []string{dummy1.Id, dummy2.Id})
 	if err != nil {
 		t.Errorf("GetListByIds method error %v", err)
 	}
-	assert.NotNil(t, items)
+	assert.Nil(t, items)
 	assert.Len(t, items, 0)
 
 }

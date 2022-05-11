@@ -6,14 +6,14 @@ implements sort.Interface
 */
 
 //------------- Sorter -----------------------
-type sorter struct {
-	items    []interface{}
-	compFunc func(a, b interface{}) bool
+type sorter[T any] struct {
+	items    []T
+	compFunc func(a, b T) bool
 }
 
 // Calculate lenth
 // Return length of items array
-func (s sorter) Len() int {
+func (s sorter[T]) Len() int {
 	return len(s.items)
 }
 
@@ -21,7 +21,7 @@ func (s sorter) Len() int {
 // Parameters:
 //	 - i,j int
 //	indexes of array for swap
-func (s sorter) Swap(i, j int) {
+func (s sorter[T]) Swap(i, j int) {
 	s.items[i], s.items[j] = s.items[j], s.items[i]
 }
 
@@ -31,7 +31,7 @@ func (s sorter) Swap(i, j int) {
 //	 indexes of array for compare
 // Returns bool
 // true if items[i] < items[j] and false otherwise
-func (s sorter) Less(i, j int) bool {
+func (s sorter[T]) Less(i, j int) bool {
 	if s.compFunc == nil {
 		panic("Sort.Less Error compare function is nil!")
 	}

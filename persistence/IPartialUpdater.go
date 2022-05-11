@@ -1,22 +1,22 @@
 package persistence
 
-import "github.com/pip-services3-go/pip-services3-commons-go/data"
+import (
+	"context"
+	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
+)
 
-/*
-  Interface for data processing components to update data items partially.
-*/
-//<T, K>
-type IPartialUpdater interface {
+// IPartialUpdater interface for data processing components to update data items partially.
+//	Typed params:
+//		- T any type of getting element
+//		- K comparable type of id (key)
+type IPartialUpdater[T IDataObject[T, K], K any] interface {
 
-	// Updates only few selected fields in a data item.
-	// Parameters:
-	//   - correlation_id string
-	//   transaction id to trace execution through call chain.
-	//   - id interface{}
-	//   an id of data item to be updated.
-	//   - data data.AnyValueMap
-	//   a map with fields to be updated.
-	// Returns interface{}, error
-	// updated item or error.
-	UpdatePartially(correlation_id string, id interface{}, data *data.AnyValueMap) (item interface{}, err error)
+	// UpdatePartially updates only few selected fields in a data item.
+	//	Parameters:
+	//		- ctx context.Context
+	//		- correlationId string transaction id to trace execution through call chain.
+	//		- id K an id of data item to be updated.
+	//		- data data.AnyValueMap a map with fields to be updated.
+	//	Returns: T, error updated item or error.
+	UpdatePartially(ctx context.Context, correlationId string, id K, data cdata.AnyValueMap) (item T, err error)
 }

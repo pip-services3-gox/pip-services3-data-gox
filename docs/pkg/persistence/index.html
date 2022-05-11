@@ -271,7 +271,7 @@ Identifiable Persistences work with Identifiable objects, which have primary key
 					<dd>&nbsp; &nbsp; <a href="index.html#JsonFilePersister.Configure">func (c *JsonFilePersister) Configure(config *config.ConfigParams)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#JsonFilePersister.Load">func (c *JsonFilePersister) Load(correlation_id string) (data []interface{}, err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#JsonFilePersister.Load">func (c *JsonFilePersister) Load(correlationId string) (data []interface{}, err error)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#JsonFilePersister.Path">func (c *JsonFilePersister) Path() string</a></dd>
@@ -794,7 +794,7 @@ interface for data processing components that can retrieve a page of data items 
 
     <span class="comment">// Gets a page of data items using filter</span>
     <span class="comment">// Parameters</span>
-    <span class="comment">//   - correlation_id</span>
+    <span class="comment">//   - correlationId</span>
     <span class="comment">//   transaction id to trace execution through call chain.</span>
     <span class="comment">//   - filter  data.FilterParams</span>
     <span class="comment">//   filter parameters</span>
@@ -804,7 +804,7 @@ interface for data processing components that can retrieve a page of data items 
     <span class="comment">//   sort parameters</span>
     <span class="comment">// Retrun  interface{}, error</span>
     <span class="comment">// list of items or error.</span>
-    GetPageByFilter(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, filter *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#FilterParams">FilterParams</a>, paging *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#PagingParams">PagingParams</a>, sort *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#SortParams">SortParams</a>) (page interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    GetPageByFilter(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, filter *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#FilterParams">FilterParams</a>, paging *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#PagingParams">PagingParams</a>, sort *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#SortParams">SortParams</a>) (page interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -834,7 +834,7 @@ Interface for data processing components that can retrieve a list of data items 
 
     <span class="comment">// Gets a list of data items using filter</span>
     <span class="comment">// Parameters:</span>
-    <span class="comment">// 	  - correlation_id string</span>
+    <span class="comment">// 	  - correlationId string</span>
     <span class="comment">//	  transaction id to trace execution through call chain.</span>
     <span class="comment">// 	  - filter data.FilterParams</span>
     <span class="comment">//    filter parameters</span>
@@ -842,7 +842,7 @@ Interface for data processing components that can retrieve a list of data items 
     <span class="comment">//	  sort parameters</span>
     <span class="comment">// Returns []interfcace{}, error</span>
     <span class="comment">// receives list of items or error.</span>
-    GetListByFilter(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, filter *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#FilterParams">FilterParams</a>, sort *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#SortParams">SortParams</a>) (items []interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    GetListByFilter(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, filter *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#FilterParams">FilterParams</a>, sort *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#SortParams">SortParams</a>) (items []interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -874,11 +874,11 @@ Interface for data processing components that can retrieve a list of data items 
 
     <span class="comment">//  Gets a data items by its unique id.</span>
     <span class="comment">//  Parameters:</span>
-    <span class="comment">//    - correlation_id    (optional) transaction id to trace execution through call chain.</span>
+    <span class="comment">//    - correlationId    (optional) transaction id to trace execution through call chain.</span>
     <span class="comment">//    - id                an id of item to be retrieved.</span>
     <span class="comment">//  Return interface{}, error</span>
     <span class="comment">// item or error</span>
-    GetOneById(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id interface{}) (item interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    GetOneById(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id interface{}) (item interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -908,11 +908,11 @@ Interface for data processing components that load data items.
 
     <span class="comment">// Loads data items.</span>
     <span class="comment">// Parameters:</span>
-    <span class="comment">//   - correlation_id string</span>
+    <span class="comment">//   - correlationId string</span>
     <span class="comment">//   transaction id to trace execution through call chain.</span>
     <span class="comment">// Retruns []interface{}, error</span>
     <span class="comment">// a list of data items or error.</span>
-    Load(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (items []interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    Load(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (items []interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -944,7 +944,7 @@ Interface for data processing components that load data items.
 
     <span class="comment">// Updates only few selected fields in a data item.</span>
     <span class="comment">// Parameters:</span>
-    <span class="comment">//   - correlation_id string</span>
+    <span class="comment">//   - correlationId string</span>
     <span class="comment">//   transaction id to trace execution through call chain.</span>
     <span class="comment">//   - id interface{}</span>
     <span class="comment">//   an id of data item to be updated.</span>
@@ -952,7 +952,7 @@ Interface for data processing components that load data items.
     <span class="comment">//   a map with fields to be updated.</span>
     <span class="comment">// Returns interface{}, error</span>
     <span class="comment">// updated item or error.</span>
-    UpdatePartially(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id interface{}, data *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#AnyValueMap">AnyValueMap</a>) (item interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    UpdatePartially(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id interface{}, data *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#AnyValueMap">AnyValueMap</a>) (item interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -982,7 +982,7 @@ Interface for data processing components that can query a page of data items.
 
     <span class="comment">//  Gets a page of data items using a query string.</span>
     <span class="comment">//  Parameters:</span>
-    <span class="comment">//   - correlation_id string</span>
+    <span class="comment">//   - correlationId string</span>
     <span class="comment">//   transaction id to trace execution through call chain.</span>
     <span class="comment">//   - query string</span>
     <span class="comment">//    a query string</span>
@@ -992,7 +992,7 @@ Interface for data processing components that can query a page of data items.
     <span class="comment">//    sort parameters</span>
     <span class="comment">// Returns interface{}, error</span>
     <span class="comment">// receives list of items or error.</span>
-    GetPageByQuery(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, query <a href="http://localhost:6060/pkg/builtin/#string">string</a>, paging *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#PagingParams">PagingParams</a>, sort *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#SortParams">SortParams</a>) (page interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    GetPageByQuery(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, query <a href="http://localhost:6060/pkg/builtin/#string">string</a>, paging *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#PagingParams">PagingParams</a>, sort *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#SortParams">SortParams</a>) (page interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -1022,7 +1022,7 @@ Interface for data processing components that can query a list of data items.
 
     <span class="comment">//  Gets a list of data items using a query string.</span>
     <span class="comment">//  Prameters:</span>
-    <span class="comment">//   - correlation_id  string</span>
+    <span class="comment">//   - correlationId  string</span>
     <span class="comment">//   transaction id to trace execution through call chain.</span>
     <span class="comment">//   - query string</span>
     <span class="comment">//   a query string</span>
@@ -1030,7 +1030,7 @@ Interface for data processing components that can query a list of data items.
     <span class="comment">//   sort parameters</span>
     <span class="comment">// Returns []interface{}, error</span>
     <span class="comment">// list of items or error.</span>
-    GetListByQuery(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, query <a href="http://localhost:6060/pkg/builtin/#string">string</a>, sort *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#SortParams">SortParams</a>) (items []interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    GetListByQuery(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, query <a href="http://localhost:6060/pkg/builtin/#string">string</a>, sort *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/">data</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/data/#SortParams">SortParams</a>) (items []interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -1060,12 +1060,12 @@ Interface for data processing components that save data items.
 
     <span class="comment">// Saves given data items.</span>
     <span class="comment">// Parameters:</span>
-    <span class="comment">//  - correlation_id string</span>
+    <span class="comment">//  - correlationId string</span>
     <span class="comment">//  transaction id to trace execution through call chain.</span>
     <span class="comment">//  - items []interface{}</span>
     <span class="comment">//  a list of items to save.</span>
     <span class="comment">// Retuirns error or nil for success.</span>
-    Save(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, items []interface{}) <a href="http://localhost:6060/pkg/builtin/#error">error</a>
+    Save(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, items []interface{}) <a href="http://localhost:6060/pkg/builtin/#error">error</a>
 }</pre>
 
 			
@@ -1096,13 +1096,13 @@ Interface for data processing components that can set (create or update) data it
     <span class="comment">// Sets a data item. If the data item exists it updates it,</span>
     <span class="comment">// otherwise it create a new data item.</span>
     <span class="comment">// Parameters:</span>
-    <span class="comment">//   - correlation_id string</span>
+    <span class="comment">//   - correlationId string</span>
     <span class="comment">//   transaction id to trace execution through call chain.</span>
     <span class="comment">//   - item  interface{}</span>
     <span class="comment">//   a item to be set.</span>
     <span class="comment">// Retruns interface{}, error</span>
     <span class="comment">// updated item or error.</span>
-    Set(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item interface{}) (value interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    Set(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item interface{}) (value interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -1132,33 +1132,33 @@ Interface for data processing components that can create, update and delete data
 
     <span class="comment">// Creates a data item.</span>
     <span class="comment">// Parameters:</span>
-    <span class="comment">//   - correlation_id string</span>
+    <span class="comment">//   - correlationId string</span>
     <span class="comment">//   transaction id to trace execution through call chain.</span>
     <span class="comment">//   - item interface{}</span>
     <span class="comment">//   an item to be created.</span>
     <span class="comment">// Returns  interface{}, error</span>
     <span class="comment">// created item or error.</span>
-    Create(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item interface{}) (value interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    Create(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item interface{}) (value interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 
     <span class="comment">// Updates a data item.</span>
     <span class="comment">// Parameters:</span>
-    <span class="comment">// 	  - correlation_id  string</span>
+    <span class="comment">// 	  - correlationId  string</span>
     <span class="comment">//    transaction id to trace execution through call chain.</span>
     <span class="comment">// 	  - item interface{}</span>
     <span class="comment">//    an item to be updated.</span>
     <span class="comment">// Returns: interface{}, error</span>
     <span class="comment">// updated item or error.</span>
-    Update(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item interface{}) (value interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    Update(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item interface{}) (value interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 
     <span class="comment">//  Deleted a data item by it&#39;s unique id.</span>
     <span class="comment">//	Parameters:</span>
-    <span class="comment">//    - correlation_id string</span>
+    <span class="comment">//    - correlationId string</span>
     <span class="comment">//	  transaction id to trace execution through call chain.</span>
     <span class="comment">//    - id interface{}</span>
     <span class="comment">//	  an id of the item to be deleted</span>
     <span class="comment">//  Returns: interface{}, error</span>
     <span class="comment">//  deleted item or error.</span>
-    DeleteById(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id interface{}) (value interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    DeleteById(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id interface{}) (value interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
 }</pre>
 
 			
@@ -1472,7 +1472,7 @@ configuration parameters to be set.
 Creates a data item.
 Returns:
 </p>
-<pre>- correlation_id string
+<pre>- correlationId string
 (optional) transaction id to trace execution through call chain.
 - item  string
 an item to be created.
@@ -1497,7 +1497,7 @@ created item or error.
 Deleted a data item by it&#39;s unique id.
 Parameters:
 </p>
-<pre>- correlation_id string
+<pre>- correlationId string
 (optional) transaction id to trace execution through call chain.
 - id interface{}
 an id of the item to be deleted
@@ -1614,7 +1614,7 @@ Sets a data item. If the data item exists it updates it,
 otherwise it create a new data item.
 Parameters:
 </p>
-<pre>- correlation_id string
+<pre>- correlationId string
 (optional) transaction id to trace execution through call chain.
 - item  interface{}
 a item to be set.
@@ -1639,7 +1639,7 @@ updated item or error.
 Updates a data item.
 Parameters:
 </p>
-<pre>- correlation_id string
+<pre>- correlationId string
 (optional) transaction id to trace execution through call chain.
 - item  interface{}
 an item to be updated.
@@ -1664,7 +1664,7 @@ updated item or error.
 Updates only few selectFuncected fields in a data item.
 Parameters:
 </p>
-<pre>- correlation_id string
+<pre>- correlationId string
 (optional) transaction id to trace execution through call chain.
 - id interface{}
 an id of data item to be updated.
@@ -1773,12 +1773,12 @@ parameters to be set.
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#JsonFilePersister">JsonFilePersister</a>) Load(correlation_id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (data []interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#JsonFilePersister">JsonFilePersister</a>) Load(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (data []interface{}, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Loads data items from external JSON file.
 Parameters:
 </p>
-<pre>- correlation_id  string
+<pre>- correlationId  string
 transaction id to trace execution through call chain.
 </pre>
 <p>
@@ -1817,7 +1817,7 @@ Returns the file path where data is stored.
 Saves given data items to external JSON file.
 Parameters:
 </p>
-<pre> - correlation_id string
+<pre> - correlationId string
  transaction id to trace execution through call chain.
  - items []interface[]
  list of data items to save
@@ -2004,7 +2004,7 @@ Retruns: error or nil if no errors occured.
 Creates a data item.
 Returns:
 </p>
-<pre>- correlation_id string
+<pre>- correlationId string
 (optional) transaction id to trace execution through call chain.
 - item  string
 an item to be created.

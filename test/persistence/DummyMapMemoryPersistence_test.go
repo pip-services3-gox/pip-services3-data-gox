@@ -1,14 +1,15 @@
 package test_persistence
 
 import (
+	"context"
 	"testing"
 
-	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
+	cconf "github.com/pip-services3-gox/pip-services3-commons-gox/config"
 )
 
 func TestDummyMapMemoryPersistence(t *testing.T) {
 	persister := NewDummyMapMemoryPersistence()
-	persister.Configure(cconf.NewEmptyConfigParams())
+	persister.Configure(context.Background(), cconf.NewEmptyConfigParams())
 
 	fixture := NewDummyMapPersistenceFixture(persister)
 

@@ -1,16 +1,17 @@
 package test_persistence
 
 import (
+	"context"
 	"testing"
 
-	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
+	cconf "github.com/pip-services3-gox/pip-services3-commons-gox/config"
 )
 
 func TestDummyMemoryPersistence(t *testing.T) {
-	persister := NewDummyMemoryPersistence()
-	persister.Configure(cconf.NewEmptyConfigParams())
+	persistence := NewDummyMemoryPersistence()
+	persistence.Configure(context.Background(), cconf.NewEmptyConfigParams())
 
-	fixture := NewDummyPersistenceFixture(persister)
+	fixture := NewDummyPersistenceFixture(persistence)
 
 	t.Run("DummyMemoryPersistence:CRUD", fixture.TestCrudOperations)
 	t.Run("DummyMemoryPersistence:Batch", fixture.TestBatchOperations)

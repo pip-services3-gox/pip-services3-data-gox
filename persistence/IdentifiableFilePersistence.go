@@ -1,8 +1,8 @@
 package persistence
 
 import (
-	"github.com/pip-services3-go/pip-services3-commons-go/config"
-	"reflect"
+	"context"
+	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
 )
 
 /*
@@ -81,26 +81,27 @@ Examples
       fmt.Println(page.Data)         // Result: { Id: "1", Name: "ABC" )
       persistence.DeleteById("123", "1")
 */
-type IdentifiableFilePersistence struct {
-	IdentifiableMemoryPersistence
-	Persister *JsonFilePersister
+type IdentifiableFilePersistence[T IDataObject[T, K], K any] struct {
+	IdentifiableMemoryPersistence[T, K]
+	Persister *JsonFilePersister[T]
 }
 
-// Creates a new instance of the persistence.
-// Parameters:
-//   - prototype reflect.Type
-//   type of contained data
-//   - persister    (optional) a persister component that loads and saves data from/to flat file.
-// Return *IdentifiableFilePersistence
-// pointer on new IdentifiableFilePersistence
-func NewIdentifiableFilePersistence(prototype reflect.Type, persister *JsonFilePersister) *IdentifiableFilePersistence {
-	c := &IdentifiableFilePersistence{}
+//
+//// Creates a new instance of the persistence.
+//// Parameters:
+////   - prototype reflect.Type
+////   type of contained data
+////   - persister    (optional) a persister component that loads and saves data from/to flat file.
+//// Return *IdentifiableFilePersistence
+//// pointer on new IdentifiableFilePersistence
+func NewIdentifiableFilePersistence[T IDataObject[T, K], K any](persister *JsonFilePersister[T]) *IdentifiableFilePersistence[T, K] {
+	c := &IdentifiableFilePersistence[T, K]{}
 	if persister == nil {
-		persister = NewJsonFilePersister(prototype, "")
+		persister = NewJsonFilePersister[T]("")
 	}
-	c.IdentifiableMemoryPersistence = *NewIdentifiableMemoryPersistence(prototype)
-	c.Loader = persister
-	c.Saver = persister
+	c.IdentifiableMemoryPersistence = *NewIdentifiableMemoryPersistence[T, K]()
+	c.MemoryPersistence.Loader = persister
+	c.MemoryPersistence.Saver = persister
 	c.Persister = persister
 	return c
 }
@@ -108,7 +109,7 @@ func NewIdentifiableFilePersistence(prototype reflect.Type, persister *JsonFileP
 // Configures component by passing configuration parameters.
 // Parameters:
 //   - config    configuration parameters to be set.
-func (c *IdentifiableFilePersistence) Configure(config *config.ConfigParams) {
-	c.Configure(config)
-	c.Persister.Configure(config)
+func (c *IdentifiableFilePersistence[T, K]) Configure(ctx context.Context, config *config.ConfigParams) {
+	c.Configure(ctx, config)
+	c.Persister.Configure(ctx, config)
 }

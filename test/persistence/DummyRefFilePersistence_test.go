@@ -1,10 +1,11 @@
 package test_persistence
 
 import (
+	"context"
 	"os"
 	"testing"
 
-	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
+	cconf "github.com/pip-services3-gox/pip-services3-commons-gox/config"
 )
 
 func TestDummyRefFilePersistence(t *testing.T) {
@@ -18,12 +19,12 @@ func TestDummyRefFilePersistence(t *testing.T) {
 	f.Close()
 
 	persistence := NewDummyRefFilePersistence(filename)
-	persistence.Configure(cconf.NewEmptyConfigParams())
+	persistence.Configure(context.Background(), cconf.NewEmptyConfigParams())
 
-	defer persistence.Close("")
+	defer persistence.Close(context.Background(), "")
 
 	fixture := NewDummyRefPersistenceFixture(persistence)
-	persistence.Open("")
+	persistence.Open(context.Background(), "")
 
 	t.Run("DummyFilePersistence:CRUD", fixture.TestCrudOperations)
 	t.Run("DummyFilePersistence:Batch", fixture.TestBatchOperations)

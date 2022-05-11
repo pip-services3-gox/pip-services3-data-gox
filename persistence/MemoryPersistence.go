@@ -1,141 +1,122 @@
 package persistence
 
 import (
-	"encoding/json"
+	"context"
 	"math/rand"
-	"reflect"
 	"sort"
 	"sync"
 	"time"
 
-	"github.com/pip-services3-go/pip-services3-commons-go/convert"
-	cdata "github.com/pip-services3-go/pip-services3-commons-go/data"
-	"github.com/pip-services3-go/pip-services3-commons-go/refer"
-	"github.com/pip-services3-go/pip-services3-components-go/log"
+	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
+	"github.com/pip-services3-gox/pip-services3-commons-gox/refer"
+	"github.com/pip-services3-gox/pip-services3-components-gox/log"
 )
 
-/*
-Abstract persistence component that stores data in memory.
+// TODO:: fix comments after complete
 
-This is the most basic persistence component that is only
-able to store data items of any type. Specific CRUD operations
-over the data items must be implemented in child struct by
-accessing Items property and calling Save method.
-
-The component supports loading and saving items from another data source.
-That allows to use it as a base struct for file and other types
-of persistence components that cache all data in memory.
-
-References
-
-- *:logger:*:*:1.0    ILogger components to pass log messages
-
-Example
-
-    type MyMemoryPersistence struct {
-        MemoryPersistence
-
-    }
-     func (c * MyMemoryPersistence) GetByName(correlationId string, name string)(item interface{}, err error) {
-        for _, v := range c.Items {
-            if v.name == name {
-                item = v
-                break
-            }
-        }
-        return item, nil
-    });
-
-    func (c * MyMemoryPersistence) Set(correlatonId: string, item: MyData, callback: (err) => void): void {
-        c.Items = append(c.Items, item);
-        c.Save(correlationId);
-    }
-
-    persistence := NewMyMemoryPersistence();
-    err := persistence.Set("123", MyData{ name: "ABC" })
-    item, err := persistence.GetByName("123", "ABC")
-    fmt.Println(item)   // Result: { name: "ABC" }
-*/
-// implements IReferenceable, IOpenable, ICleanable
-type MemoryPersistence struct {
+// MemoryPersistence abstract persistence component that stores data in memory.
+//
+//	This is the most basic persistence component that is only
+//	able to store data items of any type. Specific CRUD operations
+//	over the data items must be implemented in child struct by
+//	accessing Items property and calling Save method.
+//
+//	The component supports loading and saving items from another data source.
+//	That allows to use it as a base struct for file and other types
+//	of persistence components that cache all data in memory.
+//
+//	References:
+//		*:logger:*:*:1.0    ILogger components to pass log messages
+//	Example:
+//		type MyMemoryPersistence struct {
+//			MemoryPersistence
+//		}
+//		func (c * MyMemoryPersistence) GetByName(correlationId string, name string)(item interface{}, err error) {
+//			for _, v := range c.Items {
+//				if v.name == name {
+//					item = v
+//					break
+//				}
+//			}
+//			return item, nil
+//		});
+//
+//		func (c * MyMemoryPersistence) Set(correlatonId: string, item: MyData, callback: (err) => void): void {
+//			c.Items = append(c.Items, item);
+//			c.Save(correlationId);
+//		}
+//
+//		persistence := NewMyMemoryPersistence();
+//		err := persistence.Set("123", MyData{ name: "ABC" })
+//		item, err := persistence.GetByName("123", "ABC")
+//		fmt.Println(item)   // Result: { name: "ABC" }
+//	implements IReferenceable, IOpenable, ICleanable
+type MemoryPersistence[T cdata.ICloneable[T]] struct {
 	Logger      *log.CompositeLogger
-	Items       []interface{}
-	Loader      ILoader
-	Saver       ISaver
-	opened      bool
-	Prototype   reflect.Type
+	Items       []T
+	Loader      ILoader[T]
+	Saver       ISaver[T]
 	Lock        sync.RWMutex
+	opened      bool
 	MaxPageSize int
 }
 
-// Creates a new instance of the MemoryPersistence
-// Parameters:
-//  - prototype reflect.Type
-//   type of contained data
-// Return *MemoryPersistence
-// a MemoryPersistence
-func NewMemoryPersistence(prototype reflect.Type) *MemoryPersistence {
-	if prototype == nil {
-		return nil
-	}
-	c := &MemoryPersistence{}
-	c.Prototype = prototype
+// NewMemoryPersistence creates a new instance of the MemoryPersistence
+//	Parameters: prototype reflect.Type type of contained data
+//	Return *MemoryPersistence a MemoryPersistence
+func NewMemoryPersistence[T cdata.ICloneable[T]]() *MemoryPersistence[T] {
+	c := &MemoryPersistence[T]{}
 	c.Logger = log.NewCompositeLogger()
-	c.Items = make([]interface{}, 0, 10)
+	c.Items = make([]T, 0, 10)
 	return c
 }
 
-//  Sets references to dependent components.
-//  Parameters:
-//   - references refer.IReferences
-//   references to locate the component dependencies.
-func (c *MemoryPersistence) SetReferences(references refer.IReferences) {
-	c.Logger.SetReferences(references)
+// SetReferences references to dependent components.
+//	Parameters:
+//		- ctx context.Context
+//		- references refer.IReferences references to locate the component dependencies.
+func (c *MemoryPersistence[T]) SetReferences(ctx context.Context, references refer.IReferences) {
+	c.Logger.SetReferences(ctx, references)
 }
 
-//  Checks if the component is opened.
-//  Returns true if the component has been opened and false otherwise.
-func (c *MemoryPersistence) IsOpen() bool {
+// IsOpen checks if the component is opened.
+// 	Returns true if the component has been opened and false otherwise.
+func (c *MemoryPersistence[T]) IsOpen() bool {
+	c.Lock.RLock()
+	defer c.Lock.RUnlock()
 	return c.opened
 }
 
-// Opens the component.
-// Parameters:
-//   - correlationId  string
-//   (optional) transaction id to trace execution through call chain.
-// Returns  error or null no errors occured.
-func (c *MemoryPersistence) Open(correlationId string) error {
+// Open the component.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId  string (optional) transaction id to trace execution through call chain.
+//	Returns: error or null no errors occured.
+func (c *MemoryPersistence[T]) Open(ctx context.Context, correlationId string) error {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
 
-	err := c.load(correlationId)
-	if err == nil {
-		c.opened = true
+	if err := c.load(ctx, correlationId); err != nil {
+		return err
 	}
-	return err
+	c.opened = true
+	return nil
 }
 
-func (c *MemoryPersistence) load(correlationId string) error {
+func (c *MemoryPersistence[T]) load(ctx context.Context, correlationId string) error {
 	if c.Loader == nil {
 		return nil
 	}
 
-	items, err := c.Loader.Load(correlationId)
+	items, err := c.Loader.Load(ctx, correlationId)
 	if err == nil && items != nil {
-		c.Items = items
-		c.Items = make([]interface{}, len(items))
+		//c.Items = items
+		c.Items = make([]T, len(items))
 		for i, v := range items {
-			item := convert.MapConverter.ToNullableMap(v)
-			jsonMarshalStr, errJson := json.Marshal(item)
-			if errJson != nil {
-				panic("MemoryPersistence.Load Error can't convert from Json to type")
-			}
-			value := reflect.New(c.Prototype).Interface()
-			json.Unmarshal(jsonMarshalStr, value)
-			c.Items[i] = reflect.ValueOf(value).Elem().Interface() // load value
+			c.Items[i] = v.Clone()
 		}
 		length := len(c.Items)
-		c.Logger.Trace(correlationId, "Loaded %d items", length)
+		c.Logger.Trace(ctx, correlationId, "Loaded %d items", length)
 	}
 	return err
 }
@@ -145,8 +126,10 @@ func (c *MemoryPersistence) load(correlationId string) error {
 //  - correlationId string
 //  (optional) transaction id to trace execution through call chain.
 // Retruns: error or nil if no errors occured.
-func (c *MemoryPersistence) Close(correlationId string) error {
-	err := c.Save(correlationId)
+func (c *MemoryPersistence[T]) Close(ctx context.Context, correlationId string) error {
+	err := c.Save(ctx, correlationId)
+	c.Lock.Lock()
+	defer c.Lock.Unlock()
 	c.opened = false
 	return err
 }
@@ -156,7 +139,7 @@ func (c *MemoryPersistence) Close(correlationId string) error {
 //   - correlationId string
 //   (optional) transaction id to trace execution through call chain.
 // Return error or null for success.
-func (c *MemoryPersistence) Save(correlationId string) error {
+func (c *MemoryPersistence[T]) Save(ctx context.Context, correlationId string) error {
 	c.Lock.RLock()
 	defer c.Lock.RUnlock()
 
@@ -164,10 +147,10 @@ func (c *MemoryPersistence) Save(correlationId string) error {
 		return nil
 	}
 
-	err := c.Saver.Save(correlationId, c.Items)
+	err := c.Saver.Save(ctx, correlationId, c.Items)
 	if err == nil {
 		length := len(c.Items)
-		c.Logger.Trace(correlationId, "Saved %d items", length)
+		c.Logger.Trace(ctx, correlationId, "Saved %d items", length)
 	}
 	return err
 }
@@ -177,14 +160,17 @@ func (c *MemoryPersistence) Save(correlationId string) error {
 //  - correlationId string
 //  (optional) transaction id to trace execution through call chain.
 //  Returns error or null no errors occured.
-func (c *MemoryPersistence) Clear(correlationId string) error {
+func (c *MemoryPersistence[T]) Clear(ctx context.Context, correlationId string) error {
+	if err := c.Save(ctx, correlationId); err != nil {
+		return err
+	}
 	c.Lock.Lock()
+	defer c.Lock.Unlock()
 
-	c.Items = make([]interface{}, 0, 5)
-	c.Logger.Trace(correlationId, "Cleared items")
+	c.Items = make([]T, 0, 5)
+	c.Logger.Trace(ctx, correlationId, "Cleared items")
 
-	c.Lock.Unlock()
-	return c.Save(correlationId)
+	return nil
 }
 
 // Gets a page of data items retrieved by a given filter and sorted according to sort parameters.
@@ -203,35 +189,37 @@ func (c *MemoryPersistence) Clear(correlationId string) error {
 // (optional) projection parameters
 // Return cdata.DataPage, error
 // data page or error.
-func (c *MemoryPersistence) GetPageByFilter(correlationId string, filterFunc func(interface{}) bool,
-	paging *cdata.PagingParams, sortFunc func(a, b interface{}) bool, selectFunc func(in interface{}) (out interface{})) (page *cdata.DataPage, err error) {
+func (c *MemoryPersistence[T]) GetPageByFilter(ctx context.Context, correlationId string,
+	filterFunc func(T) bool,
+	paging cdata.PagingParams,
+	sortFunc func(T, T) bool,
+	selectFunc func(T) T) (page cdata.DataPage[T], err error) {
+
 	c.Lock.RLock()
 	defer c.Lock.RUnlock()
 
-	var items []interface{}
+	items := make([]T, 0, len(c.Items))
 
 	// Apply filtering
 	if filterFunc != nil {
 		for _, v := range c.Items {
 			if filterFunc(v) {
-				items = append(items, v)
+				items = append(items, v.Clone())
 			}
 		}
 	} else {
-		items = make([]interface{}, len(c.Items))
-		copy(items, c.Items)
+		for _, v := range c.Items {
+			items = append(items, v.Clone())
+		}
 	}
 
 	// Apply sorting
 	if sortFunc != nil {
-		localSort := sorter{items: items, compFunc: sortFunc}
+		localSort := sorter[T]{items: items, compFunc: sortFunc}
 		sort.Sort(localSort)
 	}
 
 	// Extract a page
-	if paging == nil {
-		paging = cdata.NewEmptyPagingParams()
-	}
 	skip := paging.GetSkip(-1)
 	take := paging.GetTake((int64)(c.MaxPageSize))
 	var total int64
@@ -239,6 +227,10 @@ func (c *MemoryPersistence) GetPageByFilter(correlationId string, filterFunc fun
 		total = (int64)(len(items))
 	}
 	if skip > 0 {
+		_len := (int64)(len(items))
+		if skip >= _len {
+			skip = _len
+		}
 		items = items[skip:]
 	}
 	if (int64)(len(items)) >= take {
@@ -252,15 +244,9 @@ func (c *MemoryPersistence) GetPageByFilter(correlationId string, filterFunc fun
 		}
 	}
 
-	c.Logger.Trace(correlationId, "Retrieved %d items", len(items))
-	// W!
-	for i := 0; i < len(items); i++ {
-		//items[i] = CloneObject(items[i])
-		items[i] = CloneObjectForResult(items[i], c.Prototype)
-	}
+	c.Logger.Trace(ctx, correlationId, "Retrieved %d items", len(items))
 
-	page = cdata.NewDataPage(&total, items)
-	return page, nil
+	return *cdata.NewDataPage[T](items, int(total)), nil
 }
 
 // Gets a list of data items retrieved by a given filter and sorted according to sort parameters.
@@ -277,42 +263,50 @@ func (c *MemoryPersistence) GetPageByFilter(correlationId string, filterFunc fun
 //   (optional) projection parameters
 // Returns  []interface{},  error
 // array of items and error
-func (c *MemoryPersistence) GetListByFilter(correlationId string, filterFunc func(interface{}) bool,
-	sortFunc func(a, b interface{}) bool, selectFunc func(in interface{}) (out interface{})) (results []interface{}, err error) {
+func (c *MemoryPersistence[T]) GetListByFilter(ctx context.Context, correlationId string,
+	filterFunc func(T) bool,
+	sortFunc func(T, T) bool,
+	selectFunc func(T) T) ([]T, error) {
+
 	c.Lock.RLock()
 	defer c.Lock.RUnlock()
 
 	// Apply filter
+	items := make([]T, 0, len(c.Items))
+
+	// Apply filtering
 	if filterFunc != nil {
 		for _, v := range c.Items {
 			if filterFunc(v) {
-				results = append(results, v)
+				items = append(items, v.Clone())
 			}
 		}
 	} else {
-		copy(results, c.Items)
+		for _, v := range c.Items {
+			items = append(items, v.Clone())
+		}
+	}
+
+	if len(items) == 0 {
+		return nil, nil
 	}
 
 	// Apply sorting
 	if sortFunc != nil {
-		localSort := sorter{items: results, compFunc: sortFunc}
+		localSort := sorter[T]{items: items, compFunc: sortFunc}
 		sort.Sort(localSort)
 	}
 
 	// Get projection
 	if selectFunc != nil {
-		for i, v := range results {
-			results[i] = selectFunc(v)
+		for i, v := range items {
+			items[i] = selectFunc(v)
 		}
 	}
 
-	c.Logger.Trace(correlationId, "Retrieved %d items", len(results))
-	//W!
-	for i := 0; i < len(results); i++ {
-		//results[i] = CloneObject(results[i])
-		results[i] = CloneObjectForResult(results[i], c.Prototype)
-	}
-	return results, nil
+	c.Logger.Trace(ctx, correlationId, "Retrieved %d items", len(items))
+
+	return items, nil
 }
 
 // Gets a random item from items that match to a given filter.
@@ -325,63 +319,67 @@ func (c *MemoryPersistence) GetListByFilter(correlationId string, filterFunc fun
 //   (optional) a filter function to filter items.
 // Returns: interface{}, error
 // random item or error.
-func (c *MemoryPersistence) GetOneRandom(correlationId string, filterFunc func(interface{}) bool) (result interface{}, err error) {
+func (c *MemoryPersistence[T]) GetOneRandom(ctx context.Context, correlationId string,
+	filterFunc func(T) bool) (result T, err error) {
+
 	c.Lock.RLock()
 	defer c.Lock.RUnlock()
 
-	var items []interface{}
-
 	// Apply filter
+	items := make([]T, 0, len(c.Items))
+
+	// Apply filtering
 	if filterFunc != nil {
 		for _, v := range c.Items {
 			if filterFunc(v) {
-				items = append(items, v)
+				items = append(items, v.Clone())
 			}
 		}
 	} else {
-		copy(items, c.Items)
+		for _, v := range c.Items {
+			items = append(items, v.Clone())
+		}
 	}
 	rand.Seed(time.Now().UnixNano())
 
-	var item interface{} = nil
+	var item *T = nil
 	if len(items) > 0 {
-		item = items[rand.Intn(len(items))]
+		item = &items[rand.Intn(len(items))]
 	}
 
 	if item != nil {
-		c.Logger.Trace(correlationId, "Retrieved a random item")
+		c.Logger.Trace(ctx, correlationId, "Retrieved a random item")
 	} else {
-		c.Logger.Trace(correlationId, "Nothing to return as random item")
+		c.Logger.Trace(ctx, correlationId, "Nothing to return as random item")
 	}
-	//result = CloneObject(item)
-	result = CloneObjectForResult(item, c.Prototype)
-	return result, nil
+
+	return *item, nil
 }
 
 // Creates a data item.
 // Returns:
-//   - correlation_id string
+//   - correlationId string
 //   (optional) transaction id to trace execution through call chain.
 //   - item  string
 //   an item to be created.
 // Returns:  interface{}, error
 // created item or error.
-func (c *MemoryPersistence) Create(correlationId string, item interface{}) (result interface{}, err error) {
+func (c *MemoryPersistence[T]) Create(ctx context.Context, correlationId string,
+	item T) (T, error) {
+
 	c.Lock.Lock()
 
-	newItem := CloneObject(item)
-	//GenerateObjectId(&newItem)
-	//id := GetObjectId(newItem)
-	c.Items = append(c.Items, newItem)
+	c.Items = append(c.Items, item.Clone())
+
+	c.Logger.Trace(ctx, correlationId, "Created item")
 
 	c.Lock.Unlock()
-	//c.Logger.Trace(correlationId, "Created item %s", id)
-	c.Logger.Trace(correlationId, "Created item")
 
-	errsave := c.Save(correlationId)
-	result = CloneObjectForResult(newItem, c.Prototype)
+	if err := c.Save(ctx, correlationId); err != nil {
+		return item.Clone(), err
+	}
 
-	return result, errsave
+	return item.Clone(), nil
 }
 
 // Deletes data items that match to a given filter.
@@ -394,7 +392,9 @@ func (c *MemoryPersistence) Create(correlationId string, item interface{}) (resu
 //   (optional) a filter function to filter items.
 // Retruns: error
 // error or nil for success.
-func (c *MemoryPersistence) DeleteByFilter(correlationId string, filterFunc func(interface{}) bool) (err error) {
+func (c *MemoryPersistence[T]) DeleteByFilter(ctx context.Context, correlationId string,
+	filterFunc func(T) bool) (err error) {
+
 	c.Lock.Lock()
 
 	deleted := 0
@@ -410,15 +410,15 @@ func (c *MemoryPersistence) DeleteByFilter(correlationId string, filterFunc func
 			i++
 		}
 	}
+	c.Lock.Unlock()
+
 	if deleted == 0 {
 		return nil
 	}
 
-	c.Lock.Unlock()
-	c.Logger.Trace(correlationId, "Deleted %s items", deleted)
+	c.Logger.Trace(ctx, correlationId, "Deleted %s items", deleted)
 
-	errsave := c.Save(correlationId)
-	return errsave
+	return c.Save(ctx, correlationId)
 }
 
 // Gets a count of data items retrieved by a given filter.
@@ -431,7 +431,9 @@ func (c *MemoryPersistence) DeleteByFilter(correlationId string, filterFunc func
 //  (optional) a filter function to filter items
 // Return int, error
 // data count or error.
-func (c *MemoryPersistence) GetCountByFilter(correlationId string, filterFunc func(interface{}) bool) (count int64, err error) {
+func (c *MemoryPersistence[T]) GetCountByFilter(ctx context.Context, correlationId string,
+	filterFunc func(T) bool) (count int64, err error) {
+
 	c.Lock.RLock()
 	defer c.Lock.RUnlock()
 
@@ -445,6 +447,6 @@ func (c *MemoryPersistence) GetCountByFilter(correlationId string, filterFunc fu
 	} else {
 		count = 0
 	}
-	c.Logger.Trace(correlationId, "Find %d items", count)
+	c.Logger.Trace(ctx, correlationId, "Find %d items", count)
 	return count, nil
 }

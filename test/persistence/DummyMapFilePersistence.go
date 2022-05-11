@@ -1,14 +1,14 @@
 package test_persistence
 
 import (
-	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
+	"context"
+	cconf "github.com/pip-services3-gox/pip-services3-commons-gox/config"
 	cpersist "github.com/pip-services3-gox/pip-services3-data-gox/persistence"
 )
 
-//  extends DummyMapMemoryPersistence
 type DummyMapFilePersistence struct {
 	DummyMapMemoryPersistence
-	persister *cpersist.JsonFilePersister
+	persister *cpersist.JsonFilePersister[DummyMap]
 }
 
 func NewDummyMapFilePersistence(path string) *DummyMapFilePersistence {
@@ -16,15 +16,15 @@ func NewDummyMapFilePersistence(path string) *DummyMapFilePersistence {
 		DummyMapMemoryPersistence: *NewDummyMapMemoryPersistence(),
 	}
 
-	persister := cpersist.NewJsonFilePersister(c.Prototype, path)
+	persister := cpersist.NewJsonFilePersister[DummyMap](path)
 	c.persister = persister
-	c.Loader = persister
-	c.Saver = persister
+	c.IdentifiableMemoryPersistence.Loader = persister
+	c.IdentifiableMemoryPersistence.Saver = persister
 
 	return c
 }
 
-func (c *DummyMapFilePersistence) Configure(config *cconf.ConfigParams) {
-	c.DummyMapMemoryPersistence.Configure(config)
-	c.persister.Configure(config)
+func (c *DummyMapFilePersistence) Configure(ctx context.Context, config *cconf.ConfigParams) {
+	c.DummyMapMemoryPersistence.Configure(ctx, config)
+	c.persister.Configure(ctx, config)
 }
