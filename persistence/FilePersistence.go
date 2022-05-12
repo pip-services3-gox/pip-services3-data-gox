@@ -6,66 +6,58 @@ import (
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
 
-/*
-Abstract persistence component that stores data in flat files
-and caches them in memory.
-
-FilePersistence is the most basic persistence component that is only
-able to store data items of any type. Specific CRUD operations
-over the data items must be implemented in child structs by
-accessing fp._items property and calling Save method.
-
-see MemoryPersistence
-see JsonFilePersister
-
-Configuration parameters
-
-  - path - path to the file where data is stored
-
-References
-
-- *:logger:*:*:1.0  (optional) ILogger components to pass log messages
-
-Example
-  type MyJsonFilePersistence struct {
-  	FilePersistence
-  }
-      func NewMyJsonFilePersistence(path string) *NewMyJsonFilePersistence {
-  		prototype := reflcet.TypeOf(MyData{})
-  		return &NewFilePersistence(prototype, NewJsonPersister(prototype, path))
-      }
-
-  	func (c * FilePersistence) GetByName(correlationId string, name string) (item MyData, err error){
-  		for _,v := range c._items {
-  			if v.Name == name {
-  				item = v.(MyData)
-  				break
-  			}
-  		}
-          return item, nil
-      }
-
-      func (c *FilePersistence) Set(correlatonId string, item MyData) error {
-  		for i,v := range c._items {
-  			if v.name == item.name {
-  				c._items = append(c._items[:i], c._items[i+1:])
-  			}
-  		}
-  		c._items = append(c._items, item)
-          retrun c.save(correlationId)
-      }
-  }
-*/
-//extends MemoryPersistence implements IConfigurable
+// FilePersistence is an abstract persistence component that stores data in flat files
+// and caches them in memory.
+//
+// FilePersistence is the most basic persistence component that is only
+// able to store data items of any type. Specific CRUD operations
+// over the data items must be implemented in child structs by
+// accessing fp._items property and calling Save method.
+//
+//	see MemoryPersistence
+//	see JsonFilePersister
+//
+//	Configuration parameters:
+//		- path to the file where data is stored
+//	References:
+//		- *:logger:*:*:1.0  (optional) ILogger components to pass log messages
+//	Typed params:
+//		- T cdata.ICloneable[T] any type that implemented
+//			ICloneable interface of getting element
+//
+//	Example:
+//		type MyJsonFilePersistence struct {
+//			FilePersistence[MyData]
+//		}
+//		func NewMyJsonFilePersistence(path string) *NewMyJsonFilePersistence {
+//  		return &NewFilePersistence[MyData](NewJsonPersister[MyData](path))
+//		}
+//		func (c *MyJsonFilePersistence) GetByName(ctx context.Context, correlationId string,
+//			name string) (MyData, error){
+//  			for _,v := range c.Items {
+//  				if v.Name == name {
+//  					return v
+//  				}
+//  			}
+//				var default T
+//          	return default, nil
+//		}
+//  }
+//
+//	Extends: MemoryPersistence
+//	Implements: IConfigurable
 type FilePersistence[T cdata.ICloneable[T]] struct {
 	MemoryPersistence[T]
 	Persister *JsonFilePersister[T]
 }
 
-// Creates a new instance of the persistence.
-//  - persister    (optional) a persister component that loads and saves data from/to flat file.
-// Return *FilePersistence
-// Pointer on new FilePersistence instance
+// NewFilePersistence creates a new instance of the persistence.
+//	Parameters:
+//		- persister (optional) a persister component that loads and saves data from/to flat file.
+//	Typed params:
+//		- T cdata.ICloneable[T] any type that implemented
+//			ICloneable interface of getting element
+// Returns: *FilePersistence[T] pointer on new FilePersistence instance
 func NewFilePersistence[T cdata.ICloneable[T]](persister *JsonFilePersister[T]) *FilePersistence[T] {
 	c := &FilePersistence[T]{}
 	c.MemoryPersistence = *NewMemoryPersistence[T]()
@@ -78,8 +70,10 @@ func NewFilePersistence[T cdata.ICloneable[T]](persister *JsonFilePersister[T]) 
 	return c
 }
 
-// Configures component by passing configuration parameters.
-//  - config    configuration parameters to be set.
+// Configure configures component by passing configuration parameters.
+//	Parameters:
+//		- ctx context.Context
+//		- config configuration parameters to be set.
 func (c *FilePersistence[T]) Configure(ctx context.Context, conf *config.ConfigParams) {
 	c.Persister.Configure(ctx, conf)
 }

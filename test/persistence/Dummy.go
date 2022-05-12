@@ -1,6 +1,6 @@
 package test_persistence
 
-import "github.com/pip-services3-gox/pip-services3-commons-gox/data"
+import cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 
 type Dummy struct {
 	Id      string `json:"id"`
@@ -34,16 +34,6 @@ func (d Dummy) WithId(id string) Dummy {
 }
 
 func (d Dummy) WithGeneratedId() Dummy {
-	d.Id = data.IdGenerator.NextLong()
+	d.Id = cdata.IdGenerator.NextLong()
 	return d
 }
-
-//func (d *Dummy) Merge(t *Dummy) *Dummy {
-//	if t.Key != "" {
-//		d.Key = t.Key
-//	}
-//	if t.Content != "" {
-//		d.Content = t.Content
-//	}
-//	return d
-//}

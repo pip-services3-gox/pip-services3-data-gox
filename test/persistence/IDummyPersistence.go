@@ -5,7 +5,6 @@ import (
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
 
-// extends IGetter<Dummy, String>, IWriter<Dummy, String>, IPartialUpdater<Dummy, String> {
 type IDummyPersistence interface {
 	GetPageByFilter(ctx context.Context, correlationId string, filter cdata.FilterParams, paging cdata.PagingParams) (page cdata.DataPage[Dummy], err error)
 	GetListByIds(ctx context.Context, correlationId string, ids []string) (items []Dummy, err error)

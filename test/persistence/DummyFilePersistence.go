@@ -6,7 +6,6 @@ import (
 	cpersist "github.com/pip-services3-gox/pip-services3-data-gox/persistence"
 )
 
-//  extends DummyMemoryPersistence
 type DummyFilePersistence struct {
 	DummyMemoryPersistence
 	persister *cpersist.JsonFilePersister[Dummy]
@@ -18,8 +17,8 @@ func NewDummyFilePersistence(path string) *DummyFilePersistence {
 	}
 	persister := cpersist.NewJsonFilePersister[Dummy](path)
 	c.persister = persister
-	c.IdentifiableMemoryPersistence.Loader = persister
-	c.IdentifiableMemoryPersistence.Saver = persister
+	c.Loader = persister
+	c.Saver = persister
 	return c
 }
 

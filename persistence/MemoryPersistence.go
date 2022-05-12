@@ -12,8 +12,6 @@ import (
 	"github.com/pip-services3-gox/pip-services3-components-gox/log"
 )
 
-// TODO:: fix comments after complete
-
 // MemoryPersistence abstract persistence component that stores data in memory.
 //
 //	This is the most basic persistence component that is only
@@ -25,45 +23,44 @@ import (
 //	That allows to use it as a base struct for file and other types
 //	of persistence components that cache all data in memory.
 //
+//	Important:
+//		- this component is a thread save!
+//		- the data items must implement ICloneable interface
 //	References:
 //		*:logger:*:*:1.0    ILogger components to pass log messages
+//	Typed params:
+//		- T cdata.ICloneable[T] any type that implemented
+//			ICloneable interface of getting element
 //	Example:
 //		type MyMemoryPersistence struct {
-//			MemoryPersistence
+//			MemoryPersistence[MyData]
 //		}
-//		func (c * MyMemoryPersistence) GetByName(correlationId string, name string)(item interface{}, err error) {
+//		func (c * MyMemoryPersistence) GetByName(ctx context.Context, correlationId string,
+//			name string)(MyData, error) {
 //			for _, v := range c.Items {
-//				if v.name == name {
-//					item = v
-//					break
+//				if v.Name == name {
+//					return v
 //				}
 //			}
+//			var default T
 //			return item, nil
-//		});
-//
-//		func (c * MyMemoryPersistence) Set(correlatonId: string, item: MyData, callback: (err) => void): void {
-//			c.Items = append(c.Items, item);
-//			c.Save(correlationId);
 //		}
-//
-//		persistence := NewMyMemoryPersistence();
-//		err := persistence.Set("123", MyData{ name: "ABC" })
-//		item, err := persistence.GetByName("123", "ABC")
-//		fmt.Println(item)   // Result: { name: "ABC" }
-//	implements IReferenceable, IOpenable, ICleanable
+//	Implements: IReferenceable, IOpenable, ICleanable
 type MemoryPersistence[T cdata.ICloneable[T]] struct {
 	Logger      *log.CompositeLogger
 	Items       []T
 	Loader      ILoader[T]
 	Saver       ISaver[T]
-	Lock        sync.RWMutex
+	Mtx         sync.RWMutex
 	opened      bool
 	MaxPageSize int
 }
 
 // NewMemoryPersistence creates a new instance of the MemoryPersistence
-//	Parameters: prototype reflect.Type type of contained data
-//	Return *MemoryPersistence a MemoryPersistence
+//	Typed params:
+//		- T cdata.ICloneable[T] any type that implemented
+//			ICloneable interface of getting element
+//	Return *MemoryPersistence[T]
 func NewMemoryPersistence[T cdata.ICloneable[T]]() *MemoryPersistence[T] {
 	c := &MemoryPersistence[T]{}
 	c.Logger = log.NewCompositeLogger()
@@ -82,8 +79,8 @@ func (c *MemoryPersistence[T]) SetReferences(ctx context.Context, references ref
 // IsOpen checks if the component is opened.
 // 	Returns true if the component has been opened and false otherwise.
 func (c *MemoryPersistence[T]) IsOpen() bool {
-	c.Lock.RLock()
-	defer c.Lock.RUnlock()
+	c.Mtx.RLock()
+	defer c.Mtx.RUnlock()
 	return c.opened
 }
 
@@ -91,26 +88,17 @@ func (c *MemoryPersistence[T]) IsOpen() bool {
 //	Parameters:
 //		- ctx context.Context
 //		- correlationId  string (optional) transaction id to trace execution through call chain.
-//	Returns: error or null no errors occured.
+//	Returns: error or null no errors occurred.
 func (c *MemoryPersistence[T]) Open(ctx context.Context, correlationId string) error {
-	c.Lock.Lock()
-	defer c.Lock.Unlock()
+	c.Mtx.Lock()
+	defer c.Mtx.Unlock()
 
-	if err := c.load(ctx, correlationId); err != nil {
-		return err
-	}
-	c.opened = true
-	return nil
-}
-
-func (c *MemoryPersistence[T]) load(ctx context.Context, correlationId string) error {
 	if c.Loader == nil {
 		return nil
 	}
 
 	items, err := c.Loader.Load(ctx, correlationId)
 	if err == nil && items != nil {
-		//c.Items = items
 		c.Items = make([]T, len(items))
 		for i, v := range items {
 			c.Items[i] = v.Clone()
@@ -118,30 +106,31 @@ func (c *MemoryPersistence[T]) load(ctx context.Context, correlationId string) e
 		length := len(c.Items)
 		c.Logger.Trace(ctx, correlationId, "Loaded %d items", length)
 	}
-	return err
+	c.opened = true
+	return nil
 }
 
-// Closes component and frees used resources.
-// Parameters:
-//  - correlationId string
-//  (optional) transaction id to trace execution through call chain.
-// Retruns: error or nil if no errors occured.
+// Close component and frees used resources.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId  string (optional) transaction id to trace execution through call chain.
+//	Returns: error or null no errors occurred.
 func (c *MemoryPersistence[T]) Close(ctx context.Context, correlationId string) error {
 	err := c.Save(ctx, correlationId)
-	c.Lock.Lock()
-	defer c.Lock.Unlock()
+	c.Mtx.Lock()
+	defer c.Mtx.Unlock()
 	c.opened = false
 	return err
 }
 
-// Saves items to external data source using configured saver component.
-// Parameters:
-//   - correlationId string
-//   (optional) transaction id to trace execution through call chain.
-// Return error or null for success.
+// Save items to external data source using configured saver component.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId  string (optional) transaction id to trace execution through call chain.
+//	Returns: error or null for success.
 func (c *MemoryPersistence[T]) Save(ctx context.Context, correlationId string) error {
-	c.Lock.RLock()
-	defer c.Lock.RUnlock()
+	c.Mtx.RLock()
+	defer c.Mtx.RUnlock()
 
 	if c.Saver == nil {
 		return nil
@@ -155,17 +144,17 @@ func (c *MemoryPersistence[T]) Save(ctx context.Context, correlationId string) e
 	return err
 }
 
-// Clears component state.
-// Parameters:
-//  - correlationId string
-//  (optional) transaction id to trace execution through call chain.
-//  Returns error or null no errors occured.
+// Clear component state.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId  string (optional) transaction id to trace execution through call chain.
+//	Returns: error or null no errors occurred.
 func (c *MemoryPersistence[T]) Clear(ctx context.Context, correlationId string) error {
 	if err := c.Save(ctx, correlationId); err != nil {
 		return err
 	}
-	c.Lock.Lock()
-	defer c.Lock.Unlock()
+	c.Mtx.Lock()
+	defer c.Mtx.Unlock()
 
 	c.Items = make([]T, 0, 5)
 	c.Logger.Trace(ctx, correlationId, "Cleared items")
@@ -173,30 +162,28 @@ func (c *MemoryPersistence[T]) Clear(ctx context.Context, correlationId string) 
 	return nil
 }
 
-// Gets a page of data items retrieved by a given filter and sorted according to sort parameters.
-// cmethod shall be called by a func (imp* IdentifiableMemoryPersistence) getPageByFilter method from child struct that
+// GetPageByFilter gets a page of data items retrieved by a given filter and sorted
+// according to sort parameters.
+// cmethod shall be called by a func (imp* IdentifiableMemoryPersistence)
+// getPageByFilter method from child struct that
 // receives FilterParams and converts them into a filter function.
-// Parameters:
-//   - correlationId string
-//   transaction id to trace execution through call chain.
-//   - filter func(interface{}) bool
-//   (optional) a filter function to filter items
-//   - paging *cdata.PagingParams
-//   (optional) paging parameters
-//   - sortFunc func(a, b interface{}) bool
-//   (optional) sorting compare function func Less (a, b interface{}) bool  see sort.Interface Less function
-//   - selectFunc func(in interface{}) (out interface{})
-// (optional) projection parameters
-// Return cdata.DataPage, error
-// data page or error.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId string transaction id to trace execution through call chain.
+//		- filter func(interface{}) bool (optional) a filter function to filter items
+//		- paging cdata.PagingParams (optional) paging parameters
+//		- sortFunc func(a, b T) bool (optional) sorting compare function func Less (a, b T) bool
+//			see sort.Interface Less function
+//		- selectFunc func(in T}) (out interface{}) (optional) projection parameters
+//	Return cdata.DataPage[T], error data page or error.
 func (c *MemoryPersistence[T]) GetPageByFilter(ctx context.Context, correlationId string,
 	filterFunc func(T) bool,
 	paging cdata.PagingParams,
 	sortFunc func(T, T) bool,
-	selectFunc func(T) T) (page cdata.DataPage[T], err error) {
+	selectFunc func(T) T) (cdata.DataPage[T], error) {
 
-	c.Lock.RLock()
-	defer c.Lock.RUnlock()
+	c.Mtx.RLock()
+	defer c.Mtx.RUnlock()
 
 	items := make([]T, 0, len(c.Items))
 
@@ -249,27 +236,25 @@ func (c *MemoryPersistence[T]) GetPageByFilter(ctx context.Context, correlationI
 	return *cdata.NewDataPage[T](items, int(total)), nil
 }
 
-// Gets a list of data items retrieved by a given filter and sorted according to sort parameters.
-// This method shall be called by a func (c * IdentifiableMemoryPersistence) GetListByFilter method from child struct that
+// GetListByFilter gets a list of data items retrieved by a given filter and sorted according to sort parameters.
+// This method shall be called by a func (c * IdentifiableMemoryPersistence)
+// GetListByFilter method from child struct that
 // receives FilterParams and converts them into a filter function.
-// Parameters:
-//   - correlationId string
-//   (optional) transaction id to trace execution through call chain.
-//   - filter func(interface{}) bool
-//   (optional) a filter function to filter items
-//   - sortFunc func(a, b interface{}) bool
-//   (optional) sorting compare function func Less (a, b interface{}) bool  see sort.Interface Less function
-//   - selectFunc func(in interface{}) (out interface{})
-//   (optional) projection parameters
-// Returns  []interface{},  error
-// array of items and error
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId string (optional) transaction id to trace execution through call chain.
+//		- filter func(T) bool (optional) a filter function to filter items
+//		- sortFunc func(a, b T) bool (optional) sorting compare function
+//			func Less (a, b T) bool  see sort.Interface Less function
+//		- selectFunc func(in T) (out T) (optional) projection parameters
+//	Returns: []T, error array of items and error
 func (c *MemoryPersistence[T]) GetListByFilter(ctx context.Context, correlationId string,
 	filterFunc func(T) bool,
 	sortFunc func(T, T) bool,
 	selectFunc func(T) T) ([]T, error) {
 
-	c.Lock.RLock()
-	defer c.Lock.RUnlock()
+	c.Mtx.RLock()
+	defer c.Mtx.RUnlock()
 
 	// Apply filter
 	items := make([]T, 0, len(c.Items))
@@ -309,21 +294,19 @@ func (c *MemoryPersistence[T]) GetListByFilter(ctx context.Context, correlationI
 	return items, nil
 }
 
-// Gets a random item from items that match to a given filter.
+// GetOneRandom gets a random item from items that match to a given filter.
 // This method shall be called by a func (c* IdentifiableMemoryPersistence) GetOneRandom method from child type that
 // receives FilterParams and converts them into a filter function.
-// Parameters:
-//   - correlationId string
-//   (optional) transaction id to trace execution through call chain.
-//   - filter   func(interface{}) bool
-//   (optional) a filter function to filter items.
-// Returns: interface{}, error
-// random item or error.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId string (optional) transaction id to trace execution through call chain.
+//		- filter func(T) bool (optional) a filter function to filter items.
+//	Returns: T, error random item or error.
 func (c *MemoryPersistence[T]) GetOneRandom(ctx context.Context, correlationId string,
-	filterFunc func(T) bool) (result T, err error) {
+	filterFunc func(T) bool) (T, error) {
 
-	c.Lock.RLock()
-	defer c.Lock.RUnlock()
+	c.Mtx.RLock()
+	defer c.Mtx.RUnlock()
 
 	// Apply filter
 	items := make([]T, 0, len(c.Items))
@@ -356,24 +339,21 @@ func (c *MemoryPersistence[T]) GetOneRandom(ctx context.Context, correlationId s
 	return *item, nil
 }
 
-// Creates a data item.
-// Returns:
-//   - correlationId string
-//   (optional) transaction id to trace execution through call chain.
-//   - item  string
-//   an item to be created.
-// Returns:  interface{}, error
-// created item or error.
-func (c *MemoryPersistence[T]) Create(ctx context.Context, correlationId string,
-	item T) (T, error) {
+// Create a data item.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId string (optional) transaction id to trace execution through call chain.
+//		- item T an item to be created.
+//	Returns: T, error created item or error.
+func (c *MemoryPersistence[T]) Create(ctx context.Context, correlationId string, item T) (T, error) {
 
-	c.Lock.Lock()
+	c.Mtx.Lock()
 
 	c.Items = append(c.Items, item.Clone())
 
 	c.Logger.Trace(ctx, correlationId, "Created item")
 
-	c.Lock.Unlock()
+	c.Mtx.Unlock()
 
 	if err := c.Save(ctx, correlationId); err != nil {
 		return item.Clone(), err
@@ -382,20 +362,19 @@ func (c *MemoryPersistence[T]) Create(ctx context.Context, correlationId string,
 	return item.Clone(), nil
 }
 
-// Deletes data items that match to a given filter.
-// this method shall be called by a func (c* IdentifiableMemoryPersistence) DeleteByFilter method from child struct that
+// DeleteByFilter data items that match to a given filter.
+// this method shall be called by a func (c* IdentifiableMemoryPersistence)
+// DeleteByFilter method from child struct that
 // receives FilterParams and converts them into a filter function.
-// Parameters:
-//   - correlationId  string
-//   (optional) transaction id to trace execution through call chain.
-//   - filter  filter func(interface{}) bool
-//   (optional) a filter function to filter items.
-// Retruns: error
-// error or nil for success.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId  string (optional) transaction id to trace execution through call chain.
+//		- filter  filter func(T) bool (optional) a filter function to filter items.
+//	Returns: error or nil for success.
 func (c *MemoryPersistence[T]) DeleteByFilter(ctx context.Context, correlationId string,
-	filterFunc func(T) bool) (err error) {
+	filterFunc func(T) bool) error {
 
-	c.Lock.Lock()
+	c.Mtx.Lock()
 
 	deleted := 0
 	for i := 0; i < len(c.Items); {
@@ -410,7 +389,7 @@ func (c *MemoryPersistence[T]) DeleteByFilter(ctx context.Context, correlationId
 			i++
 		}
 	}
-	c.Lock.Unlock()
+	c.Mtx.Unlock()
 
 	if deleted == 0 {
 		return nil
@@ -421,21 +400,22 @@ func (c *MemoryPersistence[T]) DeleteByFilter(ctx context.Context, correlationId
 	return c.Save(ctx, correlationId)
 }
 
-// Gets a count of data items retrieved by a given filter.
-// this method shall be called by a func (imp* IdentifiableMemoryPersistence) getCountByFilter method from child struct that
+// GetCountByFilter gets a count of data items retrieved by a given filter.
+// this method shall be called by a func (imp* IdentifiableMemoryPersistence)
+// getCountByFilter method from child struct that
 // receives FilterParams and converts them into a filter function.
-// Parameters:
-//  - correlationId string
-//  transaction id to trace execution through call chain.
-//  - filter func(interface{}) bool
-//  (optional) a filter function to filter items
-// Return int, error
-// data count or error.
+//	Parameters:
+//		- ctx context.Context
+//		- correlationId string transaction id to trace execution through call chain.
+//		- filter func(T) bool (optional) a filter function to filter items
+//	Return int64, error data count or error.
 func (c *MemoryPersistence[T]) GetCountByFilter(ctx context.Context, correlationId string,
-	filterFunc func(T) bool) (count int64, err error) {
+	filterFunc func(T) bool) (int64, error) {
 
-	c.Lock.RLock()
-	defer c.Lock.RUnlock()
+	c.Mtx.RLock()
+	defer c.Mtx.RUnlock()
+
+	var count int64
 
 	// Apply filtering
 	if filterFunc != nil {
@@ -444,8 +424,6 @@ func (c *MemoryPersistence[T]) GetCountByFilter(ctx context.Context, correlation
 				count++
 			}
 		}
-	} else {
-		count = 0
 	}
 	c.Logger.Trace(ctx, correlationId, "Find %d items", count)
 	return count, nil

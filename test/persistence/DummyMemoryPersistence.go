@@ -6,8 +6,6 @@ import (
 	cpersist "github.com/pip-services3-gox/pip-services3-data-gox/persistence"
 )
 
-// extends IdentifiableMemoryPersistence
-// implements IDummyPersistence
 type DummyMemoryPersistence struct {
 	cpersist.IdentifiableMemoryPersistence[Dummy, string]
 }
@@ -17,35 +15,6 @@ func NewDummyMemoryPersistence() *DummyMemoryPersistence {
 		*cpersist.NewIdentifiableMemoryPersistence[Dummy, string](),
 	}
 }
-
-// TODO:: remove after complete
-//func (c *DummyMemoryPersistence) GetListByIds(ctx context.Context, correlationId string, ids []string) (items []Dummy, err error) {
-//	return c.IdentifiableMemoryPersistence.GetListByIds(ctx, correlationId, ids)
-//}
-//
-//func (c *DummyMemoryPersistence) GetOneById(ctx context.Context, correlationId string, id string) (item Dummy, err error) {
-//	return c.IdentifiableMemoryPersistence.GetOneById(ctx, correlationId, id)
-//}
-//
-//func (c *DummyMemoryPersistence) Create(ctx context.Context, correlationId string, item Dummy) (result Dummy, err error) {
-//	return c.IdentifiableMemoryPersistence.Create(ctx, correlationId, item)
-//}
-//
-//func (c *DummyMemoryPersistence) Update(ctx context.Context, correlationId string, item Dummy) (result Dummy, err error) {
-//	return c.IdentifiableMemoryPersistence.Update(ctx, correlationId, item)
-//}
-//
-//func (c *DummyMemoryPersistence) UpdatePartially(ctx context.Context, correlationId string, id string, data Dummy) (item Dummy, err error) {
-//	return c.IdentifiableMemoryPersistence.UpdatePartially(ctx, correlationId, id, data)
-//}
-//
-//func (c *DummyMemoryPersistence) DeleteById(ctx context.Context, correlationId string, id string) (item Dummy, err error) {
-//	return c.IdentifiableMemoryPersistence.DeleteById(ctx, correlationId, id)
-//}
-//
-//func (c *DummyMemoryPersistence) DeleteByIds(ctx context.Context, correlationId string, ids []string) (err error) {
-//	return c.IdentifiableMemoryPersistence.DeleteByIds(ctx, correlationId, ids)
-//}
 
 func (c *DummyMemoryPersistence) GetPageByFilter(ctx context.Context, correlationId string, filter cdata.FilterParams, paging cdata.PagingParams) (cdata.DataPage[Dummy], error) {
 

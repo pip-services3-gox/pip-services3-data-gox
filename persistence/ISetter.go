@@ -1,12 +1,16 @@
 package persistence
 
-import "context"
+import (
+	"context"
+	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
+)
 
 // ISetter interface for data processing components that can set (create or update) data items.
 //	Typed params:
-//		- T any type of getting element
+//		- T cdata.ICloneable[T] any type that implemented
+//			ICloneable interface of getting element
 //		- K comparable type of id (key)
-type ISetter[T IDataObject[T, K], K any] interface {
+type ISetter[T cdata.ICloneable[T], K any] interface {
 
 	// Set a data item. If the data item exists it updates it,
 	// otherwise it create a new data item.

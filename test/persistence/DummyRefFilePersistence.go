@@ -18,8 +18,8 @@ func NewDummyRefFilePersistence(path string) *DummyRefFilePersistence {
 	}
 	persister := cpersist.NewJsonFilePersister[*DummyRef](path)
 	c.persister = persister
-	c.IdentifiableMemoryPersistence.Loader = persister
-	c.IdentifiableMemoryPersistence.Saver = persister
+	c.Loader = persister
+	c.Saver = persister
 	return c
 }
 

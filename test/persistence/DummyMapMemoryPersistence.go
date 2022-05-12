@@ -25,8 +25,8 @@ func filterFunc(filter cdata.FilterParams) func(item DummyMap) bool {
 	}
 
 	return func(value DummyMap) bool {
-		if _val, ok := value.GetAsNullableString("Key"); ok {
-			if key != "" && _val != key {
+		if _val, ok := value["Key"]; ok {
+			if _key, ok := _val.(string); !ok && key != "" && _key != key {
 				return false
 			}
 			return true
@@ -37,7 +37,25 @@ func filterFunc(filter cdata.FilterParams) func(item DummyMap) bool {
 }
 
 func sortFunc(a, b DummyMap) bool {
-	return len(a.GetAsString("Key")) < len(b.GetAsString("Key"))
+	_val, ok := a["Key"]
+	if !ok {
+		return false
+	}
+	_keyA, ok := _val.(string)
+	if !ok {
+		return false
+	}
+
+	_val, ok = b["Key"]
+	if !ok {
+		return false
+	}
+	_keyB, ok := _val.(string)
+	if !ok {
+		return false
+	}
+
+	return len(_keyA) < len(_keyB)
 }
 
 func (c *DummyMapMemoryPersistence) GetPageByFilter(ctx context.Context, correlationId string,
