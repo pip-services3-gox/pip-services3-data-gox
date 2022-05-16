@@ -1,11 +1,16 @@
 module github.com/pip-services3-gox/pip-services3-data-gox
 
-go 1.13
+go 1.18
 
 require (
-	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
-	github.com/pip-services3-go/pip-services3-commons-go v1.0.3
-	github.com/pip-services3-go/pip-services3-components-go v1.0.5
-	github.com/stretchr/testify v1.4.0
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	github.com/pip-services3-gox/pip-services3-commons-gox v1.0.3
+	github.com/pip-services3-gox/pip-services3-components-gox v1.0.3
+	github.com/stretchr/testify v1.7.0
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/satori/go.uuid v1.2.0 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
