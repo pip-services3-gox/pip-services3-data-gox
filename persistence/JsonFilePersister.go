@@ -31,7 +31,7 @@ type JsonFilePersister[T any] struct {
 	convertor convert.IJSONEngine[[]T]
 }
 
-const JsonFilePersistenceConfigParamPath = "path"
+const ConfigParamPath = "path"
 
 // NewJsonFilePersister creates a new instance of the persistence.
 //	Typed params:
@@ -61,7 +61,7 @@ func (c *JsonFilePersister[T]) SetPath(value string) {
 //		- ctx context.Context
 //		- config: ConfigParams configuration parameters to be set.
 func (c *JsonFilePersister[T]) Configure(ctx context.Context, config *config.ConfigParams) {
-	c.path = config.GetAsStringWithDefault(JsonFilePersistenceConfigParamPath, c.path)
+	c.path = config.GetAsStringWithDefault(ConfigParamPath, c.path)
 }
 
 // Load data items from external JSON file.
