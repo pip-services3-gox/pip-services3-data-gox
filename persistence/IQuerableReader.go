@@ -7,9 +7,8 @@ import (
 
 // IQuerableReader interface for data processing components that can query a list of data items.
 //	Typed params:
-//		- T cdata.ICloneable[T] any type that implemented
-//			ICloneable interface of getting element
-type IQuerableReader[T cdata.ICloneable[T]] interface {
+//		- T any type
+type IQuerableReader[T any] interface {
 
 	// GetListByQuery gets a list of data items using a query string.
 	//	Parameters:

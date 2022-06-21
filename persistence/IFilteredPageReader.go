@@ -8,9 +8,8 @@ import (
 // IFilteredPageReader is interface for data processing components
 // that can retrieve a page of data items by a filter.
 //	Typed params:
-//		- T cdata.ICloneable[T] any type that implemented
-//			ICloneable interface of getting element
-type IFilteredPageReader[T cdata.ICloneable[T]] interface {
+//		- T any type
+type IFilteredPageReader[T any] interface {
 
 	// GetPageByFilter gets a page of data items using filter
 	//	Parameters:

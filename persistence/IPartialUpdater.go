@@ -7,10 +7,9 @@ import (
 
 // IPartialUpdater interface for data processing components to update data items partially.
 //	Typed params:
-//		- T cdata.ICloneable[T] any type that implemented
-//			ICloneable interface of getting element
-//		- K comparable type of id (key)
-type IPartialUpdater[T cdata.ICloneable[T], K any] interface {
+//		- T any type
+//		- K type of id (key)
+type IPartialUpdater[T any, K any] interface {
 
 	// UpdatePartially updates only few selected fields in a data item.
 	//	Parameters:

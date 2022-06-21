@@ -2,16 +2,14 @@ package persistence
 
 import (
 	"context"
-	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
 
 // IWriter interface for data processing components
 // that can create, update and delete data items.
 //	Typed params:
-//		- T cdata.ICloneable[T] any type that implemented
-//			ICloneable interface of getting element
+//		- T any type
 //		- K any type of id (key)
-type IWriter[T cdata.ICloneable[T], K any] interface {
+type IWriter[T any, K any] interface {
 
 	// Create creates a data item.
 	//	Parameters:

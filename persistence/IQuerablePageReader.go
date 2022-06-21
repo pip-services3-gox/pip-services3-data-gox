@@ -7,9 +7,8 @@ import (
 
 // IQuerablePageReader interface for data processing components that can query a page of data items.
 //	Typed params:
-//		- T cdata.ICloneable[T] any type that implemented
-//			ICloneable interface of getting element
-type IQuerablePageReader[T cdata.ICloneable[T]] interface {
+//		- T any type
+type IQuerablePageReader[T any] interface {
 
 	// GetPageByQuery gets a page of data items using a query string.
 	//	Parameters:

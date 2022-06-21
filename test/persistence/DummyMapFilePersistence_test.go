@@ -16,7 +16,7 @@ func TestDummyMapFilePersistence(t *testing.T) {
 	if err != nil {
 		t.Error("Can't clean file: ", filename)
 	}
-	f.Close()
+	_ = f.Close()
 
 	persistence := NewDummyMapFilePersistence(filename)
 	persistence.Configure(context.Background(), cconf.NewEmptyConfigParams())
@@ -24,7 +24,7 @@ func TestDummyMapFilePersistence(t *testing.T) {
 	defer persistence.Close(context.Background(), "")
 
 	fixture := NewDummyMapPersistenceFixture(persistence)
-	persistence.Open(context.Background(), "")
+	_ = persistence.Open(context.Background(), "")
 
 	t.Run("DummyMapFilePersistence:CRUD", fixture.TestCrudOperations)
 	t.Run("DummyMapFilePersistence:Batch", fixture.TestBatchOperations)

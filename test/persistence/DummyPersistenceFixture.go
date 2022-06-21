@@ -33,6 +33,7 @@ func (c *DummyPersistenceFixture) TestCrudOperations(t *testing.T) {
 	dummy1 = result
 	assert.NotNil(t, dummy1)
 	assert.NotNil(t, dummy1.Id)
+	assert.NotEqual(t, dummy1.Id, "")
 	assert.Equal(t, c.dummy1.Key, dummy1.Key)
 	assert.Equal(t, c.dummy1.Content, dummy1.Content)
 
@@ -44,6 +45,7 @@ func (c *DummyPersistenceFixture) TestCrudOperations(t *testing.T) {
 	dummy2 = result
 	assert.NotNil(t, dummy2)
 	assert.NotNil(t, dummy2.Id)
+	assert.NotEqual(t, dummy2.Id, "")
 	assert.Equal(t, c.dummy2.Key, dummy2.Key)
 	assert.Equal(t, c.dummy2.Content, dummy2.Content)
 
@@ -53,13 +55,12 @@ func (c *DummyPersistenceFixture) TestCrudOperations(t *testing.T) {
 		t.Errorf("GetPageByFilter method error %v", err)
 	}
 	assert.NotNil(t, page)
-	items, ok := page.Data()
-	assert.True(t, ok)
-	assert.Len(t, items, 2)
+	assert.True(t, page.HasData())
+	assert.Len(t, page.Data, 2)
 	//Testing default sorting by Key field len
 
-	assert.Equal(t, items[0].Key, dummy2.Key)
-	assert.Equal(t, items[1].Key, dummy1.Key)
+	assert.Equal(t, page.Data[0].Key, dummy2.Key)
+	assert.Equal(t, page.Data[1].Key, dummy1.Key)
 
 	page, errp = c.persistence.GetPageByFilter(context.Background(), "",
 		*cdata.NewEmptyFilterParams(), *cdata.NewPagingParams(10, 1, false))
@@ -67,9 +68,8 @@ func (c *DummyPersistenceFixture) TestCrudOperations(t *testing.T) {
 		t.Errorf("GetPageByFilter method error %v", err)
 	}
 	assert.NotNil(t, page)
-	_data, ok := page.Data()
-	assert.False(t, ok)
-	assert.Len(t, _data, 0)
+	assert.False(t, page.HasData())
+	assert.Len(t, page.Data, 0)
 
 	// Get count
 	count, errc := c.persistence.GetCountByFilter(context.Background(), "", *cdata.NewEmptyFilterParams())

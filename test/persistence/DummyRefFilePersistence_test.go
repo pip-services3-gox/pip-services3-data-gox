@@ -16,7 +16,7 @@ func TestDummyRefFilePersistence(t *testing.T) {
 	if err != nil {
 		t.Error("Can't clean file: ", filename)
 	}
-	f.Close()
+	_ = f.Close()
 
 	persistence := NewDummyRefFilePersistence(filename)
 	persistence.Configure(context.Background(), cconf.NewEmptyConfigParams())
@@ -24,7 +24,7 @@ func TestDummyRefFilePersistence(t *testing.T) {
 	defer persistence.Close(context.Background(), "")
 
 	fixture := NewDummyRefPersistenceFixture(persistence)
-	persistence.Open(context.Background(), "")
+	_ = persistence.Open(context.Background(), "")
 
 	t.Run("DummyFilePersistence:CRUD", fixture.TestCrudOperations)
 	t.Run("DummyFilePersistence:Batch", fixture.TestBatchOperations)

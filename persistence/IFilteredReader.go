@@ -8,9 +8,8 @@ import (
 // IFilteredReader interface for data processing components that can
 // retrieve a list of data items by filter.
 //	Typed params:
-//		- T cdata.ICloneable[T] any type that implemented
-//			ICloneable interface of getting element
-type IFilteredReader[T cdata.ICloneable[T]] interface {
+//		- T any type
+type IFilteredReader[T any] interface {
 
 	// GetListByFilter gets a list of data items using filter
 	//	Parameters:

@@ -1,13 +1,15 @@
 package persistence
 
-import "context"
+import (
+	"context"
+	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
+)
 
 // IGetter Interface for data processing components that can get data items.
 //	Typed params:
-//		- T IDataObject[T, K] any type that implemented
-//			IDataObject interface of getting element
+//		- T cdata.IIdentifiable[T] any type
 //		- K any type of id (key)
-type IGetter[T IDataObject[T, K], K any] interface {
+type IGetter[T cdata.IIdentifiable[T], K any] interface {
 
 	// GetOneById a data items by its unique id.
 	//	Parameters:

@@ -71,7 +71,7 @@ import (
 //  	}
 //		_data, _ := page.Data()
 //      fmt.Println(_data)   // Result: { Id: "1", Name: "ABC" )
-type IdentifiableFilePersistence[T IDataObject[T, K], K any] struct {
+type IdentifiableFilePersistence[T any, K any] struct {
 	IdentifiableMemoryPersistence[T, K]
 	Persister *JsonFilePersister[T]
 }
@@ -84,7 +84,7 @@ type IdentifiableFilePersistence[T IDataObject[T, K], K any] struct {
 //	Parameters:
 //		- persister (optional) a persister component that loads and saves data from/to flat file.
 //	Returns: *IdentifiableFilePersistence pointer on new IdentifiableFilePersistence
-func NewIdentifiableFilePersistence[T IDataObject[T, K], K any](persister *JsonFilePersister[T]) *IdentifiableFilePersistence[T, K] {
+func NewIdentifiableFilePersistence[T any, K any](persister *JsonFilePersister[T]) *IdentifiableFilePersistence[T, K] {
 	c := &IdentifiableFilePersistence[T, K]{}
 	if persister == nil {
 		persister = NewJsonFilePersister[T]("")

@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+	"github.com/pip-services3-gox/pip-services3-commons-gox/convert"
 	"math/rand"
 	"sort"
 	"sync"
@@ -25,7 +26,7 @@ import (
 //
 //	Important:
 //		- this component is a thread save!
-//		- the data items must implement ICloneable interface
+//		- if data object will implement ICloneable interface, it rises speed of execution
 //	References:
 //		*:logger:*:*:1.0    ILogger components to pass log messages
 //	Typed params:
@@ -46,7 +47,7 @@ import (
 //			return item, nil
 //		}
 //	Implements: IReferenceable, IOpenable, ICleanable
-type MemoryPersistence[T cdata.ICloneable[T]] struct {
+type MemoryPersistence[T any] struct {
 	Logger      *log.CompositeLogger
 	Items       []T
 	Loader      ILoader[T]
@@ -54,6 +55,7 @@ type MemoryPersistence[T cdata.ICloneable[T]] struct {
 	Mtx         sync.RWMutex
 	opened      bool
 	MaxPageSize int
+	convertor   convert.IJSONEngine[T]
 }
 
 // NewMemoryPersistence creates a new instance of the MemoryPersistence
@@ -61,8 +63,10 @@ type MemoryPersistence[T cdata.ICloneable[T]] struct {
 //		- T cdata.ICloneable[T] any type that implemented
 //			ICloneable interface of getting element
 //	Return *MemoryPersistence[T]
-func NewMemoryPersistence[T cdata.ICloneable[T]]() *MemoryPersistence[T] {
-	c := &MemoryPersistence[T]{}
+func NewMemoryPersistence[T any]() *MemoryPersistence[T] {
+	c := &MemoryPersistence[T]{
+		convertor: convert.NewDefaultCustomTypeJsonConvertor[T](),
+	}
 	c.Logger = log.NewCompositeLogger()
 	c.Items = make([]T, 0, 10)
 	return c
@@ -101,7 +105,7 @@ func (c *MemoryPersistence[T]) Open(ctx context.Context, correlationId string) e
 	if err == nil && items != nil {
 		c.Items = make([]T, len(items))
 		for i, v := range items {
-			c.Items[i] = v.Clone()
+			c.Items[i] = c.cloneItem(v)
 		}
 		length := len(c.Items)
 		c.Logger.Trace(ctx, correlationId, "Loaded %d items", length)
@@ -164,13 +168,13 @@ func (c *MemoryPersistence[T]) Clear(ctx context.Context, correlationId string) 
 
 // GetPageByFilter gets a page of data items retrieved by a given filter and sorted
 // according to sort parameters.
-// cmethod shall be called by a func (imp* IdentifiableMemoryPersistence)
+// method shall be called by a func (imp* IdentifiableMemoryPersistence)
 // getPageByFilter method from child struct that
 // receives FilterParams and converts them into a filter function.
 //	Parameters:
 //		- ctx context.Context
 //		- correlationId string transaction id to trace execution through call chain.
-//		- filter func(interface{}) bool (optional) a filter function to filter items
+//		- filter func(any) bool (optional) a filter function to filter items
 //		- paging cdata.PagingParams (optional) paging parameters
 //		- sortFunc func(a, b T) bool (optional) sorting compare function func Less (a, b T) bool
 //			see sort.Interface Less function
@@ -191,12 +195,12 @@ func (c *MemoryPersistence[T]) GetPageByFilter(ctx context.Context, correlationI
 	if filterFunc != nil {
 		for _, v := range c.Items {
 			if filterFunc(v) {
-				items = append(items, v.Clone())
+				items = append(items, c.cloneItem(v))
 			}
 		}
 	} else {
 		for _, v := range c.Items {
-			items = append(items, v.Clone())
+			items = append(items, c.cloneItem(v))
 		}
 	}
 
@@ -263,12 +267,12 @@ func (c *MemoryPersistence[T]) GetListByFilter(ctx context.Context, correlationI
 	if filterFunc != nil {
 		for _, v := range c.Items {
 			if filterFunc(v) {
-				items = append(items, v.Clone())
+				items = append(items, c.cloneItem(v))
 			}
 		}
 	} else {
 		for _, v := range c.Items {
-			items = append(items, v.Clone())
+			items = append(items, c.cloneItem(v))
 		}
 	}
 
@@ -315,12 +319,12 @@ func (c *MemoryPersistence[T]) GetOneRandom(ctx context.Context, correlationId s
 	if filterFunc != nil {
 		for _, v := range c.Items {
 			if filterFunc(v) {
-				items = append(items, v.Clone())
+				items = append(items, c.cloneItem(v))
 			}
 		}
 	} else {
 		for _, v := range c.Items {
-			items = append(items, v.Clone())
+			items = append(items, c.cloneItem(v))
 		}
 	}
 	rand.Seed(time.Now().UnixNano())
@@ -349,17 +353,17 @@ func (c *MemoryPersistence[T]) Create(ctx context.Context, correlationId string,
 
 	c.Mtx.Lock()
 
-	c.Items = append(c.Items, item.Clone())
+	c.Items = append(c.Items, c.cloneItem(item))
 
 	c.Logger.Trace(ctx, correlationId, "Created item")
 
 	c.Mtx.Unlock()
 
 	if err := c.Save(ctx, correlationId); err != nil {
-		return item.Clone(), err
+		return c.cloneItem(item), err
 	}
 
-	return item.Clone(), nil
+	return c.cloneItem(item), nil
 }
 
 // DeleteByFilter data items that match to a given filter.
@@ -427,4 +431,14 @@ func (c *MemoryPersistence[T]) GetCountByFilter(ctx context.Context, correlation
 	}
 	c.Logger.Trace(ctx, correlationId, "Find %d items", count)
 	return count, nil
+}
+
+func (c *MemoryPersistence[T]) cloneItem(item any) T {
+	if cloneableItem, ok := item.(cdata.ICloneable[T]); ok {
+		return cloneableItem.Clone()
+	}
+
+	strObject, _ := c.convertor.ToJson(item.(T))
+	newItem, _ := c.convertor.FromJson(strObject)
+	return newItem
 }

@@ -13,11 +13,11 @@ import (
 // IdentifiableMemoryPersistence Abstract persistence component that stores data in memory
 // and implements a number of CRUD operations over data items with unique ids.
 //
-// In basic scenarios child structs shall only override GetPageByFilter,
+// In basic scenarios' child structs shall only override GetPageByFilter,
 // GetListByFilter or DeleteByFilter operations with specific filter function.
 // All other operations can be used out of the box.
 //
-// In complex scenarios child structes can implement additional operations by
+// In complex scenarios' child structs can implement additional operations by
 // accessing cached items via c.Items property and calling Save method
 // on updates.
 //	Important:
@@ -69,7 +69,7 @@ import (
 //
 //	Extends: MemoryPersistence
 //	Implements: IConfigurable, IWriter, IGetter, ISetter
-type IdentifiableMemoryPersistence[T IDataObject[T, K], K any] struct {
+type IdentifiableMemoryPersistence[T any, K any] struct {
 	MemoryPersistence[T]
 	Mtx sync.RWMutex
 }
@@ -82,7 +82,7 @@ const IdentifiableMemoryPersistenceConfigParamOptionsMaxPageSize = "options.max_
 //			IDataObject interface of getting element
 //		- K any type if id (key)
 // Returns: *IdentifiableMemoryPersistence created empty IdentifiableMemoryPersistence
-func NewIdentifiableMemoryPersistence[T IDataObject[T, K], K any]() (c *IdentifiableMemoryPersistence[T, K]) {
+func NewIdentifiableMemoryPersistence[T any, K any]() (c *IdentifiableMemoryPersistence[T, K]) {
 	c = &IdentifiableMemoryPersistence[T, K]{
 		MemoryPersistence: *NewMemoryPersistence[T](),
 	}
@@ -109,14 +109,13 @@ func (c *IdentifiableMemoryPersistence[T, K]) GetListByIds(ctx context.Context, 
 	ids []K) ([]T, error) {
 
 	filter := func(item T) bool {
-		exist := false
-		for _, id := range ids {
-			if item.IsEqualId(id) {
-				exist = true
-				break
+		itemId := c.getItemId(item)
+		for _, _id := range ids {
+			if c.isEqualIds(itemId, _id) {
+				return true
 			}
 		}
-		return exist
+		return false
 	}
 	return c.GetListByFilter(ctx, correlationId, filter, nil, nil)
 }
@@ -133,9 +132,10 @@ func (c *IdentifiableMemoryPersistence[T, K]) GetOneById(ctx context.Context, co
 	defer c.Mtx.RUnlock()
 
 	for _, item := range c.Items {
-		if item.IsEqualId(id) {
+		itemId := c.getItemId(item)
+		if c.isEqualIds(itemId, id) {
 			c.Logger.Trace(ctx, correlationId, "Retrieved item %s", id)
-			return item.Clone(), nil
+			return c.cloneItem(item), nil
 		}
 	}
 
@@ -152,7 +152,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) GetIndexById(id K) int {
 	defer c.Mtx.RUnlock()
 
 	for i, item := range c.Items {
-		if item.IsEqualId(id) {
+		if c.isEqualIds(c.getItemId(item), id) {
 			return i
 		}
 	}
@@ -168,37 +168,37 @@ func (c *IdentifiableMemoryPersistence[T, K]) GetIndexById(id K) int {
 func (c *IdentifiableMemoryPersistence[T, K]) Create(ctx context.Context, correlationId string, item T) (T, error) {
 	c.Mtx.Lock()
 
-	newItem := item.Clone()
-	if newItem.IsZeroId() {
-		newItem = newItem.WithGeneratedId()
+	newItem := c.cloneItem(item)
+	if _item, ok := c.setItemId(newItem, c.getItemId(newItem)).(T); ok {
+		newItem = _item
 	}
-	// TODO:: think about a appending
+
 	c.Items = append(c.Items, newItem)
 
 	c.Mtx.Unlock()
-	c.Logger.Trace(ctx, correlationId, "Created item %s", newItem.GetId())
+	c.Logger.Trace(ctx, correlationId, "Created item %s", c.getItemId(newItem))
 
 	if err := c.Save(ctx, correlationId); err != nil {
-		return newItem.Clone(), err
+		return c.cloneItem(newItem), err
 	}
 
-	return newItem.Clone(), nil
+	return c.cloneItem(newItem), nil
 }
 
 // Set a data item. If the data item exists it updates it,
-// otherwise it create a new data item.
+// otherwise it creates a new data item.
 //	Parameters:
 //		- ctx context.Context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- item T a item to be set.
 // Returns: T, error updated item or error.
 func (c *IdentifiableMemoryPersistence[T, K]) Set(ctx context.Context, correlationId string, item T) (T, error) {
-	newItem := item.Clone()
-	if newItem.IsZeroId() {
-		newItem = newItem.WithGeneratedId()
+	newItem := c.cloneItem(item)
+	if _item, ok := c.setItemId(newItem, c.getItemId(newItem)).(T); ok {
+		newItem = _item
 	}
 
-	index := c.GetIndexById(item.GetId())
+	index := c.GetIndexById(c.getItemId(item))
 
 	c.Mtx.Lock()
 	if index < 0 {
@@ -208,13 +208,13 @@ func (c *IdentifiableMemoryPersistence[T, K]) Set(ctx context.Context, correlati
 	}
 
 	c.Mtx.Unlock()
-	c.Logger.Trace(ctx, correlationId, "Set item %s", newItem.GetId())
+	c.Logger.Trace(ctx, correlationId, "Set item %s", c.getItemId(newItem))
 
 	if err := c.Save(ctx, correlationId); err != nil {
-		return newItem.Clone(), err
+		return c.cloneItem(newItem), err
 	}
 
-	return newItem.Clone(), nil
+	return c.cloneItem(newItem), nil
 }
 
 // Update a data item.
@@ -226,24 +226,24 @@ func (c *IdentifiableMemoryPersistence[T, K]) Set(ctx context.Context, correlati
 func (c *IdentifiableMemoryPersistence[T, K]) Update(ctx context.Context, correlationId string, item T) (T, error) {
 	var defaultObject T
 
-	index := c.GetIndexById(item.GetId())
+	index := c.GetIndexById(c.getItemId(item))
 	if index < 0 {
-		c.Logger.Trace(ctx, correlationId, "Item %s was not found", item.GetId())
+		c.Logger.Trace(ctx, correlationId, "Item %s was not found", c.getItemId(item))
 		return defaultObject, nil
 	}
-	newItem := item.Clone()
+	newItem := c.cloneItem(item)
 
 	c.Mtx.Lock()
 	c.Items[index] = newItem
 	c.Mtx.Unlock()
 
-	c.Logger.Trace(ctx, correlationId, "Updated item %s", item.GetId())
+	c.Logger.Trace(ctx, correlationId, "Updated item %s", c.getItemId(item))
 
 	if err := c.Save(ctx, correlationId); err != nil {
-		return newItem.Clone(), err
+		return c.cloneItem(newItem), err
 	}
 
-	return newItem.Clone(), nil
+	return c.cloneItem(newItem), nil
 }
 
 // UpdatePartially only few selected fields in a data item.
@@ -265,7 +265,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) UpdatePartially(ctx context.Contex
 
 	c.Mtx.Lock()
 
-	newItem := c.Items[index].Clone()
+	newItem := c.cloneItem(c.Items[index])
 
 	if reflect.ValueOf(newItem).Kind() == reflect.Map {
 		refl.ObjectWriter.SetProperties(newItem, data.Value())
@@ -288,10 +288,10 @@ func (c *IdentifiableMemoryPersistence[T, K]) UpdatePartially(ctx context.Contex
 	c.Logger.Trace(ctx, correlationId, "Partially updated item %s", id)
 
 	if err := c.Save(ctx, correlationId); err != nil {
-		return newItem.Clone(), err
+		return c.cloneItem(newItem), err
 	}
 
-	return newItem.Clone(), nil
+	return c.cloneItem(newItem), nil
 }
 
 // DeleteById a data item by it's unique id.
@@ -336,8 +336,9 @@ func (c *IdentifiableMemoryPersistence[T, K]) DeleteById(ctx context.Context, co
 //	Returns: error or null for success.
 func (c *IdentifiableMemoryPersistence[T, K]) DeleteByIds(ctx context.Context, correlationId string, ids []K) error {
 	filterFunc := func(item T) bool {
+		itemId := c.getItemId(item)
 		for _, id := range ids {
-			if item.IsEqualId(id) {
+			if c.isEqualIds(itemId, id) {
 				return true
 			}
 		}
@@ -345,4 +346,47 @@ func (c *IdentifiableMemoryPersistence[T, K]) DeleteByIds(ctx context.Context, c
 	}
 
 	return c.DeleteByFilter(ctx, correlationId, filterFunc)
+}
+
+func (c *IdentifiableMemoryPersistence[T, K]) isEqualIds(idA, idB any) bool {
+	if _cmpId, ok := idA.(cdata.IEquatable[K]); ok {
+		return _cmpId.Equals(idB.(K))
+	}
+	return CompareValues(idA, idB)
+}
+
+func (c *IdentifiableMemoryPersistence[T, K]) getItemId(item any) K {
+	if _item, ok := item.(cdata.IIdentifiable[K]); ok {
+		return _item.GetId()
+	}
+
+	if _id, ok := GetObjectId(item).(K); ok {
+		return _id
+	}
+
+	var defaultValue K
+	return defaultValue
+}
+
+func (c *IdentifiableMemoryPersistence[T, K]) setItemId(item any, id any) any {
+	newId := id
+	if c.isEmptyId(id) {
+		newId = cdata.IdGenerator.NextLong()
+	}
+	if _item, ok := item.(cdata.IIdentifiable[K]); ok {
+		_id, _ := newId.(K)
+		_item.SetId(_id)
+		item, _ = _item.(T)
+	} else {
+		SetObjectId(&item, newId)
+	}
+	return item
+}
+
+func (c *IdentifiableMemoryPersistence[T, K]) isEmptyId(id any) bool {
+	if _id, ok := id.(cdata.IIdentifier[K]); ok {
+		return _id.Empty()
+	}
+
+	return reflect.ValueOf(id).IsZero()
 }
