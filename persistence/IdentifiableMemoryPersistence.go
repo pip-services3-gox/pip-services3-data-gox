@@ -349,9 +349,6 @@ func (c *IdentifiableMemoryPersistence[T, K]) DeleteByIds(ctx context.Context, c
 }
 
 func (c *IdentifiableMemoryPersistence[T, K]) isEqualIds(idA, idB any) bool {
-	if _cmpId, ok := idA.(cdata.IEquatable[K]); ok {
-		return _cmpId.Equals(idB.(K))
-	}
 	return CompareValues(idA, idB)
 }
 
@@ -373,13 +370,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) setItemId(item any, id any) any {
 	if c.isEmptyId(id) {
 		newId = cdata.IdGenerator.NextLong()
 	}
-	if _item, ok := item.(cdata.IIdentifiable[K]); ok {
-		_id, _ := newId.(K)
-		_item.SetId(_id)
-		item, _ = _item.(T)
-	} else {
-		SetObjectId(&item, newId)
-	}
+	SetObjectId(&item, newId)
 	return item
 }
 
