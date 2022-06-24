@@ -14,7 +14,7 @@
 
 
 
-<script>var goVersion = "go1.18.2";</script>
+<script>var goVersion = "go1.18.3";</script>
 <script src="../../lib/godoc/godocs.js" defer></script>
 </head>
 <body>
@@ -113,6 +113,39 @@
 			
 			
 			
+				
+				<dd><a href="index.html#CloneObject">func CloneObject(item any, proto reflect.Type) any</a></dd>
+			
+				
+				<dd><a href="index.html#CloneObjectForResult">func CloneObjectForResult(src any, proto reflect.Type) any</a></dd>
+			
+				
+				<dd><a href="index.html#CompareValues">func CompareValues(value1 any, value2 any) bool</a></dd>
+			
+				
+				<dd><a href="index.html#FromIds">func FromIds(ids []string) []any</a></dd>
+			
+				
+				<dd><a href="index.html#GenerateObjectId">func GenerateObjectId(item *any)</a></dd>
+			
+				
+				<dd><a href="index.html#GetObjectId">func GetObjectId(item any) any</a></dd>
+			
+				
+				<dd><a href="index.html#GetProperty">func GetProperty(obj any, name string) any</a></dd>
+			
+				
+				<dd><a href="index.html#SetObjectId">func SetObjectId(item *any, id any)</a></dd>
+			
+				
+				<dd><a href="index.html#SetProperty">func SetProperty(obj any, name string, value any)</a></dd>
+			
+				
+				<dd><a href="index.html#ToPublicArray">func ToPublicArray(values []any) []map[string]any</a></dd>
+			
+				
+				<dd><a href="index.html#ToPublicMap">func ToPublicMap(value any) map[string]any</a></dd>
+			
 			
 				
 				<dd><a href="index.html#FilePersistence">type FilePersistence</a></dd>
@@ -123,11 +156,6 @@
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#FilePersistence.Configure">func (c *FilePersistence[T]) Configure(ctx context.Context, conf *config.ConfigParams)</a></dd>
-				
-			
-				
-				<dd><a href="index.html#IDataObject">type IDataObject</a></dd>
-				
 				
 			
 				
@@ -184,7 +212,7 @@
 				<dd><a href="index.html#IdentifiableFilePersistence">type IdentifiableFilePersistence</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#NewIdentifiableFilePersistence">func NewIdentifiableFilePersistence[T IDataObject[T, K], K any](persister *JsonFilePersister[T]) *IdentifiableFilePersistence[T, K]</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#NewIdentifiableFilePersistence">func NewIdentifiableFilePersistence[T any, K any](persister *JsonFilePersister[T]) *IdentifiableFilePersistence[T, K]</a></dd>
 				
 				
 					
@@ -195,7 +223,7 @@
 				<dd><a href="index.html#IdentifiableMemoryPersistence">type IdentifiableMemoryPersistence</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#NewIdentifiableMemoryPersistence">func NewIdentifiableMemoryPersistence[T IDataObject[T, K], K any]() (c *IdentifiableMemoryPersistence[T, K])</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#NewIdentifiableMemoryPersistence">func NewIdentifiableMemoryPersistence[T any, K any]() (c *IdentifiableMemoryPersistence[T, K])</a></dd>
 				
 				
 					
@@ -256,7 +284,7 @@
 				<dd><a href="index.html#MemoryPersistence">type MemoryPersistence</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#NewMemoryPersistence">func NewMemoryPersistence[T cdata.ICloneable[T]]() *MemoryPersistence[T]</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#NewMemoryPersistence">func NewMemoryPersistence[T any]() *MemoryPersistence[T]</a></dd>
 				
 				
 					
@@ -309,8 +337,6 @@
 			
 				<a href="http://localhost:6060/src/persistence/FilePersistence.go">FilePersistence.go</a>
 			
-				<a href="http://localhost:6060/src/persistence/IDataObject.go">IDataObject.go</a>
-			
 				<a href="http://localhost:6060/src/persistence/IFilteredPageReader.go">IFilteredPageReader.go</a>
 			
 				<a href="http://localhost:6060/src/persistence/IFilteredReader.go">IFilteredReader.go</a>
@@ -341,6 +367,8 @@
 			
 				<a href="http://localhost:6060/src/persistence/Sorter.go">Sorter.go</a>
 			
+				<a href="http://localhost:6060/src/persistence/Utilities.go">Utilities.go</a>
+			
 				<a href="http://localhost:6060/src/persistence/doc.go">doc.go</a>
 			
 			</span>
@@ -362,6 +390,232 @@
 			
 		
 		
+		
+			
+			
+			<h2 id="CloneObject">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=5757:5807#L218">CloneObject</a>
+				<a class="permalink" href="index.html#CloneObject">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func CloneObject(item <a href="http://localhost:6060/pkg/builtin/#any">any</a>, proto <a href="http://localhost:6060/pkg/reflect/">reflect</a>.<a href="http://localhost:6060/pkg/reflect/#Type">Type</a>) <a href="http://localhost:6060/pkg/builtin/#any">any</a></pre>
+			<p>
+CloneObject is clones object function
+</p>
+<pre>Parameters:
+	- item any an object to clone
+Return any copy of input item
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CloneObjectForResult">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=6881:6939#L257">CloneObjectForResult</a>
+				<a class="permalink" href="index.html#CloneObjectForResult">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func CloneObjectForResult(src <a href="http://localhost:6060/pkg/builtin/#any">any</a>, proto <a href="http://localhost:6060/pkg/reflect/">reflect</a>.<a href="http://localhost:6060/pkg/reflect/#Type">Type</a>) <a href="http://localhost:6060/pkg/builtin/#any">any</a></pre>
+			<p>
+CloneObjectForResult is clones object for result function
+</p>
+<pre>Parameters:
+	- item any an object to clone
+	- proto reflect.Type of returned value, need for detect object or pointer returned type
+Returns: any copy of input item
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CompareValues">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=7982:8029#L295">CompareValues</a>
+				<a class="permalink" href="index.html#CompareValues">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func CompareValues(value1 <a href="http://localhost:6060/pkg/builtin/#any">any</a>, value2 <a href="http://localhost:6060/pkg/builtin/#any">any</a>) <a href="http://localhost:6060/pkg/builtin/#bool">bool</a></pre>
+			<p>
+CompareValues are ompares two values
+</p>
+<pre>Parameters:
+	- value1 any an object one for compare
+	- value2 any an object two for compare
+Returns: bool true if value1 equal value2 and false otherwise
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="FromIds">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=8264:8296#L306">FromIds</a>
+				<a class="permalink" href="index.html#FromIds">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func FromIds(ids []<a href="http://localhost:6060/pkg/builtin/#string">string</a>) []<a href="http://localhost:6060/pkg/builtin/#any">any</a></pre>
+			<p>
+FromIds method convert ids string array to array of any object
+</p>
+<pre>Parameters:
+	- ids - []string array of ids
+Returns: []any array of ids
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="GenerateObjectId">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=5368:5400#L201">GenerateObjectId</a>
+				<a class="permalink" href="index.html#GenerateObjectId">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func GenerateObjectId(item *<a href="http://localhost:6060/pkg/builtin/#any">any</a>)</pre>
+			<p>
+GenerateObjectId is generates a new id value when it&#39;s empty
+</p>
+<pre>Parameters:
+	- item *any a pointer on object to set id property
+Results: saved in input object
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="GetObjectId">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=4219:4249#L163">GetObjectId</a>
+				<a class="permalink" href="index.html#GetObjectId">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func GetObjectId(item <a href="http://localhost:6060/pkg/builtin/#any">any</a>) <a href="http://localhost:6060/pkg/builtin/#any">any</a></pre>
+			<p>
+GetObjectId value
+</p>
+<pre>Parameters:
+	- item any an object to read property from.
+Returns: any the property value or nil if property doesn&#39;t exist or introspection failed.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="GetProperty">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=1242:1284#L43">GetProperty</a>
+				<a class="permalink" href="index.html#GetProperty">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func GetProperty(obj <a href="http://localhost:6060/pkg/builtin/#any">any</a>, name <a href="http://localhost:6060/pkg/builtin/#string">string</a>) <a href="http://localhost:6060/pkg/builtin/#any">any</a></pre>
+			<p>
+GetProperty value of object property specified by its name.
+</p>
+<pre>Parameters:
+	- obj any an object to read property from.
+	- name string a name of the property to get.
+Returns: any the property value or null if property doesn&#39;t exist or introspection failed.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetObjectId">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=4459:4494#L172">SetObjectId</a>
+				<a class="permalink" href="index.html#SetObjectId">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func SetObjectId(item *<a href="http://localhost:6060/pkg/builtin/#any">any</a>, id <a href="http://localhost:6060/pkg/builtin/#any">any</a>)</pre>
+			<p>
+SetObjectId is set object Id value
+</p>
+<pre>Parameters:
+	- item *any a pointer on object to set id property
+	- id any id value for set
+Results: saved in input object
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SetProperty">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=2749:2798#L104">SetProperty</a>
+				<a class="permalink" href="index.html#SetProperty">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func SetProperty(obj <a href="http://localhost:6060/pkg/builtin/#any">any</a>, name <a href="http://localhost:6060/pkg/builtin/#string">string</a>, value <a href="http://localhost:6060/pkg/builtin/#any">any</a>)</pre>
+			<p>
+SetProperty value of object property specified by its name.
+If the property does not exist or introspection fails this method doesn&#39;t do anything and doesn&#39;t any throw errors.
+</p>
+<pre>Parameters:
+	- obj any an object to write property to.
+	- name string a name of the property to set.
+	- value any a new value for the property to set.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ToPublicArray">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=8880:8929#L330">ToPublicArray</a>
+				<a class="permalink" href="index.html#ToPublicArray">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func ToPublicArray(values []<a href="http://localhost:6060/pkg/builtin/#any">any</a>) []map[<a href="http://localhost:6060/pkg/builtin/#string">string</a>]<a href="http://localhost:6060/pkg/builtin/#any">any</a></pre>
+			<p>
+ToPublicArray method convert array of any object to array of map[string]any
+</p>
+<pre>Parameters:
+	- value []any input object to convert
+Returns: []map[string]any converted map array
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ToPublicMap">func <a href="http://localhost:6060/src/persistence/Utilities.go?s=8559:8601#L318">ToPublicMap</a>
+				<a class="permalink" href="index.html#ToPublicMap">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func ToPublicMap(value <a href="http://localhost:6060/pkg/builtin/#any">any</a>) map[<a href="http://localhost:6060/pkg/builtin/#string">string</a>]<a href="http://localhost:6060/pkg/builtin/#any">any</a></pre>
+			<p>
+ToPublicMap method convert any object to map[string]any
+</p>
+<pre>Parameters:
+	- value any input object to convert
+Returns: map[string]any converted object to map
+</pre>
+
+			
+			
+
 		
 		
 			
@@ -477,65 +731,7 @@ Configure configures component by passing configuration parameters.
 		
 			
 			
-			<h2 id="IDataObject">type <a href="http://localhost:6060/src/persistence/IDataObject.go?s=864:956#L27">IDataObject</a>
-				<a class="permalink" href="index.html#IDataObject">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-IDataObject interface for data objects to operate inside persistence.
-</p>
-<pre>Example
-	type MyDataObject struct {
-		Id string
-		...
-	}
-	func (d MyDataObject) IsEqualId(id string) bool {
-		return d.Id == id
-	}
-	func (d MyDataObject) GetId() string {
-		return d.Id
-	}
-	func (d MyDataObject) IsZeroId() bool {
-		return d.Id == &#34;&#34;
-	}
-	func (d MyDataObject) WithId(id string) MyDataObject {
-		d.Id = id
-		return d
-	}
-	func (d MyDataObject) WithGeneratedId() MyDataObject {
-		d.Id = data.IdGenerator.NextLong()
-		return d
-	}
-	func (c MyDataObject) Clone() MyDataObject {
-		cloneObj := MyDataObject{
-			// Copy every attribute from this to cloneObj here.
-			...
-		}
-		return cloneObj
-	}
-</pre>
-
-			<pre>type IDataObject[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>, K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
-    <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T]
-    <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#IIdentifiable">IIdentifiable</a>[T, K]
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="IFilteredPageReader">type <a href="http://localhost:6060/src/persistence/IFilteredPageReader.go?s=351:971#L3">IFilteredPageReader</a>
+			<h2 id="IFilteredPageReader">type <a href="http://localhost:6060/src/persistence/IFilteredPageReader.go?s=269:873#L2">IFilteredPageReader</a>
 				<a class="permalink" href="index.html#IFilteredPageReader">&#xb6;</a>
 				
 				
@@ -545,11 +741,10 @@ IFilteredPageReader is interface for data processing components
 that can retrieve a page of data items by a filter.
 </p>
 <pre>Typed params:
-	- T cdata.ICloneable[T] any type that implemented
-		ICloneable interface of getting element
+	- T any type
 </pre>
 
-			<pre>type IFilteredPageReader[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T]] interface {
+			<pre>type IFilteredPageReader[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
 
     <span class="comment">// GetPageByFilter gets a page of data items using filter</span>
     <span class="comment">//	Parameters:</span>
@@ -577,7 +772,7 @@ that can retrieve a page of data items by a filter.
 		
 			
 			
-			<h2 id="IFilteredReader">type <a href="http://localhost:6060/src/persistence/IFilteredReader.go?s=342:871#L3">IFilteredReader</a>
+			<h2 id="IFilteredReader">type <a href="http://localhost:6060/src/persistence/IFilteredReader.go?s=260:773#L2">IFilteredReader</a>
 				<a class="permalink" href="index.html#IFilteredReader">&#xb6;</a>
 				
 				
@@ -587,11 +782,10 @@ IFilteredReader interface for data processing components that can
 retrieve a list of data items by filter.
 </p>
 <pre>Typed params:
-	- T cdata.ICloneable[T] any type that implemented
-		ICloneable interface of getting element
+	- T any type
 </pre>
 
-			<pre>type IFilteredReader[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T]] interface {
+			<pre>type IFilteredReader[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
 
     <span class="comment">// GetListByFilter gets a list of data items using filter</span>
     <span class="comment">//	Parameters:</span>
@@ -618,7 +812,7 @@ retrieve a list of data items by filter.
 		
 			
 			
-			<h2 id="IGetter">type <a href="http://localhost:6060/src/persistence/IGetter.go?s=260:648#L1">IGetter</a>
+			<h2 id="IGetter">type <a href="http://localhost:6060/src/persistence/IGetter.go?s=276:669#L2">IGetter</a>
 				<a class="permalink" href="index.html#IGetter">&#xb6;</a>
 				
 				
@@ -627,12 +821,11 @@ retrieve a list of data items by filter.
 IGetter Interface for data processing components that can get data items.
 </p>
 <pre>Typed params:
-	- T IDataObject[T, K] any type that implemented
-		IDataObject interface of getting element
+	- T cdata.IIdentifiable[T] any type
 	- K any type of id (key)
 </pre>
 
-			<pre>type IGetter[T <a href="index.html#IDataObject">IDataObject</a>[T, K], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
+			<pre>type IGetter[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#IIdentifiable">IIdentifiable</a>[T], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
 
     <span class="comment">// GetOneById a data items by its unique id.</span>
     <span class="comment">//	Parameters:</span>
@@ -693,7 +886,7 @@ ILoader interface for data processing components that load data items.
 		
 			
 			
-			<h2 id="IPartialUpdater">type <a href="http://localhost:6060/src/persistence/IPartialUpdater.go?s=357:879#L3">IPartialUpdater</a>
+			<h2 id="IPartialUpdater">type <a href="http://localhost:6060/src/persistence/IPartialUpdater.go?s=264:770#L2">IPartialUpdater</a>
 				<a class="permalink" href="index.html#IPartialUpdater">&#xb6;</a>
 				
 				
@@ -702,12 +895,11 @@ ILoader interface for data processing components that load data items.
 IPartialUpdater interface for data processing components to update data items partially.
 </p>
 <pre>Typed params:
-	- T cdata.ICloneable[T] any type that implemented
-		ICloneable interface of getting element
-	- K comparable type of id (key)
+	- T any type
+	- K type of id (key)
 </pre>
 
-			<pre>type IPartialUpdater[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
+			<pre>type IPartialUpdater[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>, K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
 
     <span class="comment">// UpdatePartially updates only few selected fields in a data item.</span>
     <span class="comment">//	Parameters:</span>
@@ -733,7 +925,7 @@ IPartialUpdater interface for data processing components to update data items pa
 		
 			
 			
-			<h2 id="IQuerablePageReader">type <a href="http://localhost:6060/src/persistence/IQuerablePageReader.go?s=330:945#L2">IQuerablePageReader</a>
+			<h2 id="IQuerablePageReader">type <a href="http://localhost:6060/src/persistence/IQuerablePageReader.go?s=248:847#L1">IQuerablePageReader</a>
 				<a class="permalink" href="index.html#IQuerablePageReader">&#xb6;</a>
 				
 				
@@ -742,11 +934,10 @@ IPartialUpdater interface for data processing components to update data items pa
 IQuerablePageReader interface for data processing components that can query a page of data items.
 </p>
 <pre>Typed params:
-	- T cdata.ICloneable[T] any type that implemented
-		ICloneable interface of getting element
+	- T any type
 </pre>
 
-			<pre>type IQuerablePageReader[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T]] interface {
+			<pre>type IQuerablePageReader[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
 
     <span class="comment">// GetPageByQuery gets a page of data items using a query string.</span>
     <span class="comment">//	Parameters:</span>
@@ -774,7 +965,7 @@ IQuerablePageReader interface for data processing components that can query a pa
 		
 			
 			
-			<h2 id="IQuerableReader">type <a href="http://localhost:6060/src/persistence/IQuerableReader.go?s=326:824#L2">IQuerableReader</a>
+			<h2 id="IQuerableReader">type <a href="http://localhost:6060/src/persistence/IQuerableReader.go?s=244:726#L1">IQuerableReader</a>
 				<a class="permalink" href="index.html#IQuerableReader">&#xb6;</a>
 				
 				
@@ -783,11 +974,10 @@ IQuerablePageReader interface for data processing components that can query a pa
 IQuerableReader interface for data processing components that can query a list of data items.
 </p>
 <pre>Typed params:
-	- T cdata.ICloneable[T] any type that implemented
-		ICloneable interface of getting element
+	- T any type
 </pre>
 
-			<pre>type IQuerableReader[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T]] interface {
+			<pre>type IQuerableReader[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
 
     <span class="comment">// GetListByQuery gets a list of data items using a query string.</span>
     <span class="comment">//	Parameters:</span>
@@ -851,7 +1041,7 @@ ISaver interface for data processing components that save data items.
 		
 			
 			
-			<h2 id="ISetter">type <a href="http://localhost:6060/src/persistence/ISetter.go?s=361:802#L3">ISetter</a>
+			<h2 id="ISetter">type <a href="http://localhost:6060/src/persistence/ISetter.go?s=199:624#L1">ISetter</a>
 				<a class="permalink" href="index.html#ISetter">&#xb6;</a>
 				
 				
@@ -860,12 +1050,11 @@ ISaver interface for data processing components that save data items.
 ISetter interface for data processing components that can set (create or update) data items.
 </p>
 <pre>Typed params:
-	- T cdata.ICloneable[T] any type that implemented
-		ICloneable interface of getting element
-	- K comparable type of id (key)
+	- T any type
+	- K type of id (key)
 </pre>
 
-			<pre>type ISetter[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
+			<pre>type ISetter[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>, K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
 
     <span class="comment">// Set a data item. If the data item exists it updates it,</span>
     <span class="comment">// otherwise it create a new data item.</span>
@@ -891,7 +1080,7 @@ ISetter interface for data processing components that can set (create or update)
 		
 			
 			
-			<h2 id="IWriter">type <a href="http://localhost:6060/src/persistence/IWriter.go?s=360:1392#L4">IWriter</a>
+			<h2 id="IWriter">type <a href="http://localhost:6060/src/persistence/IWriter.go?s=209:1225#L2">IWriter</a>
 				<a class="permalink" href="index.html#IWriter">&#xb6;</a>
 				
 				
@@ -901,12 +1090,11 @@ IWriter interface for data processing components
 that can create, update and delete data items.
 </p>
 <pre>Typed params:
-	- T cdata.ICloneable[T] any type that implemented
-		ICloneable interface of getting element
+	- T any type
 	- K any type of id (key)
 </pre>
 
-			<pre>type IWriter[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
+			<pre>type IWriter[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>, K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] interface {
 
     <span class="comment">// Create creates a data item.</span>
     <span class="comment">//	Parameters:</span>
@@ -947,7 +1135,7 @@ that can create, update and delete data items.
 		
 			
 			
-			<h2 id="IdentifiableFilePersistence">type <a href="http://localhost:6060/src/persistence/IdentifiableFilePersistence.go?s=2738:2879#L64">IdentifiableFilePersistence</a>
+			<h2 id="IdentifiableFilePersistence">type <a href="http://localhost:6060/src/persistence/IdentifiableFilePersistence.go?s=2738:2865#L64">IdentifiableFilePersistence</a>
 				<a class="permalink" href="index.html#IdentifiableFilePersistence">&#xb6;</a>
 				
 				
@@ -1024,7 +1212,7 @@ on updates.
      fmt.Println(_data)   // Result: { Id: &#34;1&#34;, Name: &#34;ABC&#34; )
 </pre>
 
-			<pre>type IdentifiableFilePersistence[T <a href="index.html#IDataObject">IDataObject</a>[T, K], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] struct {
+			<pre>type IdentifiableFilePersistence[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>, K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] struct {
     <a href="index.html#IdentifiableMemoryPersistence">IdentifiableMemoryPersistence</a>[T, K]
 <span id="IdentifiableFilePersistence.Persister"></span>    Persister *<a href="index.html#JsonFilePersister">JsonFilePersister</a>[T]
 }
@@ -1040,12 +1228,12 @@ on updates.
 
 			
 				
-				<h3 id="NewIdentifiableFilePersistence">func <a href="http://localhost:6060/src/persistence/IdentifiableFilePersistence.go?s=3301:3432#L77">NewIdentifiableFilePersistence</a>
+				<h3 id="NewIdentifiableFilePersistence">func <a href="http://localhost:6060/src/persistence/IdentifiableFilePersistence.go?s=3287:3404#L77">NewIdentifiableFilePersistence</a>
 					<a class="permalink" href="index.html#NewIdentifiableFilePersistence">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func NewIdentifiableFilePersistence[T <a href="index.html#IDataObject">IDataObject</a>[T, K], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>](persister *<a href="index.html#JsonFilePersister">JsonFilePersister</a>[T]) *<a href="index.html#IdentifiableFilePersistence">IdentifiableFilePersistence</a>[T, K]</pre>
+				<pre>func NewIdentifiableFilePersistence[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>, K <a href="http://localhost:6060/pkg/builtin/#any">any</a>](persister *<a href="index.html#JsonFilePersister">JsonFilePersister</a>[T]) *<a href="index.html#IdentifiableFilePersistence">IdentifiableFilePersistence</a>[T, K]</pre>
 				<p>
 NewIdentifiableFilePersistence creates a new instance of the persistence.
 </p>
@@ -1064,7 +1252,7 @@ Returns: *IdentifiableFilePersistence pointer on new IdentifiableFilePersistence
 
 			
 				
-				<h3 id="IdentifiableFilePersistence.Configure">func (*IdentifiableFilePersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableFilePersistence.go?s=3875:3978#L93">Configure</a>
+				<h3 id="IdentifiableFilePersistence.Configure">func (*IdentifiableFilePersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableFilePersistence.go?s=3847:3950#L93">Configure</a>
 					<a class="permalink" href="index.html#IdentifiableFilePersistence.Configure">&#xb6;</a>
 					
 					
@@ -1085,7 +1273,7 @@ Configure component by passing configuration parameters.
 		
 			
 			
-			<h2 id="IdentifiableMemoryPersistence">type <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=2676:2789#L62">IdentifiableMemoryPersistence</a>
+			<h2 id="IdentifiableMemoryPersistence">type <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=2677:2776#L62">IdentifiableMemoryPersistence</a>
 				<a class="permalink" href="index.html#IdentifiableMemoryPersistence">&#xb6;</a>
 				
 				
@@ -1095,12 +1283,12 @@ IdentifiableMemoryPersistence Abstract persistence component that stores data in
 and implements a number of CRUD operations over data items with unique ids.
 </p>
 <p>
-In basic scenarios child structs shall only override GetPageByFilter,
+In basic scenarios&#39; child structs shall only override GetPageByFilter,
 GetListByFilter or DeleteByFilter operations with specific filter function.
 All other operations can be used out of the box.
 </p>
 <p>
-In complex scenarios child structes can implement additional operations by
+In complex scenarios&#39; child structs can implement additional operations by
 accessing cached items via c.Items property and calling Save method
 on updates.
 </p>
@@ -1155,7 +1343,7 @@ on updates.
 	Implements: IConfigurable, IWriter, IGetter, ISetter
 </pre>
 
-			<pre>type IdentifiableMemoryPersistence[T <a href="index.html#IDataObject">IDataObject</a>[T, K], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] struct {
+			<pre>type IdentifiableMemoryPersistence[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>, K <a href="http://localhost:6060/pkg/builtin/#any">any</a>] struct {
     <a href="index.html#MemoryPersistence">MemoryPersistence</a>[T]
 <span id="IdentifiableMemoryPersistence.Mtx"></span>    Mtx <a href="http://localhost:6060/pkg/sync/">sync</a>.<a href="http://localhost:6060/pkg/sync/#RWMutex">RWMutex</a>
 }
@@ -1171,12 +1359,12 @@ on updates.
 
 			
 				
-				<h3 id="NewIdentifiableMemoryPersistence">func <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=3205:3313#L75">NewIdentifiableMemoryPersistence</a>
+				<h3 id="NewIdentifiableMemoryPersistence">func <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=3192:3286#L75">NewIdentifiableMemoryPersistence</a>
 					<a class="permalink" href="index.html#NewIdentifiableMemoryPersistence">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func NewIdentifiableMemoryPersistence[T <a href="index.html#IDataObject">IDataObject</a>[T, K], K <a href="http://localhost:6060/pkg/builtin/#any">any</a>]() (c *<a href="index.html#IdentifiableMemoryPersistence">IdentifiableMemoryPersistence</a>[T, K])</pre>
+				<pre>func NewIdentifiableMemoryPersistence[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>, K <a href="http://localhost:6060/pkg/builtin/#any">any</a>]() (c *<a href="index.html#IdentifiableMemoryPersistence">IdentifiableMemoryPersistence</a>[T, K])</pre>
 				<p>
 NewIdentifiableMemoryPersistence creates a new empty instance of the persistence.
 </p>
@@ -1195,7 +1383,7 @@ Returns: *IdentifiableMemoryPersistence created empty IdentifiableMemoryPersiste
 
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.Configure">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=3653:3758#L88">Configure</a>
+				<h3 id="IdentifiableMemoryPersistence.Configure">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=3626:3731#L88">Configure</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.Configure">&#xb6;</a>
 					
 					
@@ -1214,7 +1402,7 @@ Configure component by passing configuration parameters.
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.Create">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=5741:5855#L158">Create</a>
+				<h3 id="IdentifiableMemoryPersistence.Create">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=5782:5896#L158">Create</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.Create">&#xb6;</a>
 					
 					
@@ -1235,7 +1423,7 @@ Returns: T, error created item or error.
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.DeleteById">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=9594:9710#L292">DeleteById</a>
+				<h3 id="IdentifiableMemoryPersistence.DeleteById">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=9742:9858#L292">DeleteById</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.DeleteById">&#xb6;</a>
 					
 					
@@ -1255,7 +1443,7 @@ Returns: T, error deleted item or error.
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.DeleteByIds">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=10508:10623#L327">DeleteByIds</a>
+				<h3 id="IdentifiableMemoryPersistence.DeleteByIds">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=10656:10771#L327">DeleteByIds</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.DeleteByIds">&#xb6;</a>
 					
 					
@@ -1276,7 +1464,7 @@ Returns: error or null for success.
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.GetIndexById">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=5304:5372#L140">GetIndexById</a>
+				<h3 id="IdentifiableMemoryPersistence.GetIndexById">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=5328:5396#L140">GetIndexById</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.GetIndexById">&#xb6;</a>
 					
 					
@@ -1293,7 +1481,7 @@ GetIndexById get index by &#34;Id&#34; field
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.GetListByIds">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=4184:4308#L98">GetListByIds</a>
+				<h3 id="IdentifiableMemoryPersistence.GetListByIds">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=4157:4281#L98">GetListByIds</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.GetListByIds">&#xb6;</a>
 					
 					
@@ -1315,7 +1503,7 @@ Returns: []T, error data list or error.
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.GetOneById">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=4805:4921#L120">GetOneById</a>
+				<h3 id="IdentifiableMemoryPersistence.GetOneById">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=4788:4904#L119">GetOneById</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.GetOneById">&#xb6;</a>
 					
 					
@@ -1338,7 +1526,7 @@ Returns: T, error data item or error.
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.Set">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=6550:6661#L185">Set</a>
+				<h3 id="IdentifiableMemoryPersistence.Set">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=6603:6714#L185">Set</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.Set">&#xb6;</a>
 					
 					
@@ -1346,7 +1534,7 @@ Returns: T, error data item or error.
 				<pre>func (c *<a href="index.html#IdentifiableMemoryPersistence">IdentifiableMemoryPersistence</a>[T, K]) Set(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item T) (T, <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Set a data item. If the data item exists it updates it,
-otherwise it create a new data item.
+otherwise it creates a new data item.
 </p>
 <pre>Parameters:
 	- ctx context.Context
@@ -1362,7 +1550,7 @@ Returns: T, error updated item or error.
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.Update">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=7343:7457#L216">Update</a>
+				<h3 id="IdentifiableMemoryPersistence.Update">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=7446:7560#L216">Update</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.Update">&#xb6;</a>
 					
 					
@@ -1385,7 +1573,7 @@ Returns: T, error updated item or error.
 				
 			
 				
-				<h3 id="IdentifiableMemoryPersistence.UpdatePartially">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=8234:8380#L245">UpdatePartially</a>
+				<h3 id="IdentifiableMemoryPersistence.UpdatePartially">func (*IdentifiableMemoryPersistence[T, K]) <a href="http://localhost:6060/src/persistence/IdentifiableMemoryPersistence.go?s=8367:8513#L245">UpdatePartially</a>
 					<a class="permalink" href="index.html#IdentifiableMemoryPersistence.UpdatePartially">&#xb6;</a>
 					
 					
@@ -1569,7 +1757,7 @@ Parameters: value string the file path where data is stored.
 		
 			
 			
-			<h2 id="MemoryPersistence">type <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=1520:1735#L39">MemoryPersistence</a>
+			<h2 id="MemoryPersistence">type <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=1615:1850#L40">MemoryPersistence</a>
 				<a class="permalink" href="index.html#MemoryPersistence">&#xb6;</a>
 				
 				
@@ -1588,7 +1776,7 @@ of persistence components that cache all data in memory.
 
 Important:
 	- this component is a thread save!
-	- the data items must implement ICloneable interface
+	- if data object will implement ICloneable interface, it rises speed of execution
 References:
 	*:logger:*:*:1.0    ILogger components to pass log messages
 Typed params:
@@ -1611,7 +1799,7 @@ Example:
 Implements: IReferenceable, IOpenable, ICleanable
 </pre>
 
-			<pre>type MemoryPersistence[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T]] struct {
+			<pre>type MemoryPersistence[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>] struct {
 <span id="MemoryPersistence.Logger"></span>    Logger *<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-components-gox/log/">log</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-components-gox/log/#CompositeLogger">CompositeLogger</a>
 <span id="MemoryPersistence.Items"></span>    Items  []T
 <span id="MemoryPersistence.Loader"></span>    Loader <a href="index.html#ILoader">ILoader</a>[T]
@@ -1633,12 +1821,12 @@ Implements: IReferenceable, IOpenable, ICleanable
 
 			
 				
-				<h3 id="NewMemoryPersistence">func <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=1957:2029#L54">NewMemoryPersistence</a>
+				<h3 id="NewMemoryPersistence">func <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=2072:2128#L56">NewMemoryPersistence</a>
 					<a class="permalink" href="index.html#NewMemoryPersistence">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func NewMemoryPersistence[T <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#ICloneable">ICloneable</a>[T]]() *<a href="index.html#MemoryPersistence">MemoryPersistence</a>[T]</pre>
+				<pre>func NewMemoryPersistence[T <a href="http://localhost:6060/pkg/builtin/#any">any</a>]() *<a href="index.html#MemoryPersistence">MemoryPersistence</a>[T]</pre>
 				<p>
 NewMemoryPersistence creates a new instance of the MemoryPersistence
 </p>
@@ -1654,7 +1842,7 @@ Return *MemoryPersistence[T]
 
 			
 				
-				<h3 id="MemoryPersistence.Clear">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=4550:4635#L142">Clear</a>
+				<h3 id="MemoryPersistence.Clear">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=4717:4802#L146">Clear</a>
 					<a class="permalink" href="index.html#MemoryPersistence.Clear">&#xb6;</a>
 					
 					
@@ -1674,7 +1862,7 @@ Returns: error or null no errors occurred.
 				
 			
 				
-				<h3 id="MemoryPersistence.Close">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=3570:3655#L108">Close</a>
+				<h3 id="MemoryPersistence.Close">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=3737:3822#L112">Close</a>
 					<a class="permalink" href="index.html#MemoryPersistence.Close">&#xb6;</a>
 					
 					
@@ -1694,7 +1882,7 @@ Returns: error or null no errors occurred.
 				
 			
 				
-				<h3 id="MemoryPersistence.Create">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=10030:10129#L338">Create</a>
+				<h3 id="MemoryPersistence.Create">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=10218:10317#L342">Create</a>
 					<a class="permalink" href="index.html#MemoryPersistence.Create">&#xb6;</a>
 					
 					
@@ -1715,7 +1903,7 @@ Returns: T, error created item or error.
 				
 			
 				
-				<h3 id="MemoryPersistence.DeleteByFilter">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=10874:10994#L364">DeleteByFilter</a>
+				<h3 id="MemoryPersistence.DeleteByFilter">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=11077:11197#L368">DeleteByFilter</a>
 					<a class="permalink" href="index.html#MemoryPersistence.DeleteByFilter">&#xb6;</a>
 					
 					
@@ -1740,7 +1928,7 @@ Returns: error or nil for success.
 				
 			
 				
-				<h3 id="MemoryPersistence.GetCountByFilter">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=11916:12047#L402">GetCountByFilter</a>
+				<h3 id="MemoryPersistence.GetCountByFilter">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=12119:12250#L406">GetCountByFilter</a>
 					<a class="permalink" href="index.html#MemoryPersistence.GetCountByFilter">&#xb6;</a>
 					
 					
@@ -1765,7 +1953,7 @@ Return int64, error data count or error.
 				
 			
 				
-				<h3 id="MemoryPersistence.GetListByFilter">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=7659:7837#L241">GetListByFilter</a>
+				<h3 id="MemoryPersistence.GetListByFilter">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=7827:8005#L245">GetListByFilter</a>
 					<a class="permalink" href="index.html#MemoryPersistence.GetListByFilter">&#xb6;</a>
 					
 					
@@ -1795,7 +1983,7 @@ Returns: []T, error array of items and error
 				
 			
 				
-				<h3 id="MemoryPersistence.GetOneRandom">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=9039:9162#L295">GetOneRandom</a>
+				<h3 id="MemoryPersistence.GetOneRandom">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=9217:9340#L299">GetOneRandom</a>
 					<a class="permalink" href="index.html#MemoryPersistence.GetOneRandom">&#xb6;</a>
 					
 					
@@ -1819,7 +2007,7 @@ Returns: T, error random item or error.
 				
 			
 				
-				<h3 id="MemoryPersistence.GetPageByFilter">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=5676:5896#L169">GetPageByFilter</a>
+				<h3 id="MemoryPersistence.GetPageByFilter">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=5834:6054#L173">GetPageByFilter</a>
 					<a class="permalink" href="index.html#MemoryPersistence.GetPageByFilter">&#xb6;</a>
 					
 					
@@ -1832,14 +2020,14 @@ Returns: T, error random item or error.
 				<p>
 GetPageByFilter gets a page of data items retrieved by a given filter and sorted
 according to sort parameters.
-cmethod shall be called by a func (imp* IdentifiableMemoryPersistence)
+method shall be called by a func (imp* IdentifiableMemoryPersistence)
 getPageByFilter method from child struct that
 receives FilterParams and converts them into a filter function.
 </p>
 <pre>Parameters:
 	- ctx context.Context
 	- correlationId string transaction id to trace execution through call chain.
-	- filter func(interface{}) bool (optional) a filter function to filter items
+	- filter func(any) bool (optional) a filter function to filter items
 	- paging cdata.PagingParams (optional) paging parameters
 	- sortFunc func(a, b T) bool (optional) sorting compare function func Less (a, b T) bool
 		see sort.Interface Less function
@@ -1852,7 +2040,7 @@ Return cdata.DataPage[T], error data page or error.
 				
 			
 				
-				<h3 id="MemoryPersistence.IsOpen">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=2576:2620#L71">IsOpen</a>
+				<h3 id="MemoryPersistence.IsOpen">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=2738:2782#L75">IsOpen</a>
 					<a class="permalink" href="index.html#MemoryPersistence.IsOpen">&#xb6;</a>
 					
 					
@@ -1869,7 +2057,7 @@ IsOpen checks if the component is opened.
 				
 			
 				
-				<h3 id="MemoryPersistence.Open">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=2884:2968#L82">Open</a>
+				<h3 id="MemoryPersistence.Open">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=3046:3130#L86">Open</a>
 					<a class="permalink" href="index.html#MemoryPersistence.Open">&#xb6;</a>
 					
 					
@@ -1889,7 +2077,7 @@ Returns: error or null no errors occurred.
 				
 			
 				
-				<h3 id="MemoryPersistence.Save">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=4007:4091#L121">Save</a>
+				<h3 id="MemoryPersistence.Save">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=4174:4258#L125">Save</a>
 					<a class="permalink" href="index.html#MemoryPersistence.Save">&#xb6;</a>
 					
 					
@@ -1909,7 +2097,7 @@ Returns: error or null for success.
 				
 			
 				
-				<h3 id="MemoryPersistence.SetReferences">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=2318:2413#L65">SetReferences</a>
+				<h3 id="MemoryPersistence.SetReferences">func (*MemoryPersistence[T]) <a href="http://localhost:6060/src/persistence/MemoryPersistence.go?s=2480:2575#L69">SetReferences</a>
 					<a class="permalink" href="index.html#MemoryPersistence.SetReferences">&#xb6;</a>
 					
 					
@@ -1939,7 +2127,7 @@ SetReferences references to dependent components.
 
 
 <div id="footer">
-Build version go1.18.2.<br>
+Build version go1.18.3.<br>
 Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
 the content of this page is licensed under the
 Creative Commons Attribution 3.0 License,

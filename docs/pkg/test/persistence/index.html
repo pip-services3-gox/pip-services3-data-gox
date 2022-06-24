@@ -14,7 +14,7 @@
 
 
 
-<script>var goVersion = "go1.18.2";</script>
+<script>var goVersion = "go1.18.3";</script>
 <script src="../../../lib/godoc/godocs.js" defer></script>
 </head>
 <body>
@@ -116,24 +116,6 @@
 				<dd><a href="index.html#Dummy">type Dummy</a></dd>
 				
 				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#Dummy.Clone">func (d Dummy) Clone() Dummy</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#Dummy.GetId">func (d Dummy) GetId() string</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#Dummy.IsEqualId">func (d Dummy) IsEqualId(id string) bool</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#Dummy.IsZeroId">func (d Dummy) IsZeroId() bool</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#Dummy.WithGeneratedId">func (d Dummy) WithGeneratedId() Dummy</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#Dummy.WithId">func (d Dummy) WithId(id string) Dummy</a></dd>
-				
 			
 				
 				<dd><a href="index.html#DummyFilePersistence">type DummyFilePersistence</a></dd>
@@ -147,26 +129,61 @@
 				
 			
 				
+				<dd><a href="index.html#DummyInterfacable">type DummyInterfacable</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DummyInterfacable.Clone">func (d DummyInterfacable) Clone() DummyInterfacable</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DummyInterfacable.GetId">func (d DummyInterfacable) GetId() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DummyInterfacable.SetId">func (d *DummyInterfacable) SetId(id string)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#DummyInterfacableFilePersistence">type DummyInterfacableFilePersistence</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDummyInterfacableFilePersistence">func NewDummyInterfacableFilePersistence(path string) *DummyInterfacableFilePersistence</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DummyInterfacableFilePersistence.Configure">func (c *DummyInterfacableFilePersistence) Configure(ctx context.Context, config *cconf.ConfigParams)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#DummyInterfacableMemoryPersistence">type DummyInterfacableMemoryPersistence</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDummyInterfacableMemoryPersistence">func NewDummyInterfacableMemoryPersistence() *DummyInterfacableMemoryPersistence</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DummyInterfacableMemoryPersistence.GetCountByFilter">func (c *DummyInterfacableMemoryPersistence) GetCountByFilter(ctx context.Context, correlationId string, filter cdata.FilterParams) (count int64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DummyInterfacableMemoryPersistence.GetPageByFilter">func (c *DummyInterfacableMemoryPersistence) GetPageByFilter(ctx context.Context, correlationId string, filter cdata.FilterParams, paging cdata.PagingParams) (cdata.DataPage[DummyInterfacable], error)</a></dd>
+				
+			
+				
+				<dd><a href="index.html#DummyInterfacablePersistenceFixture">type DummyInterfacablePersistenceFixture</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewDummyInterfacablePersistenceFixture">func NewDummyInterfacablePersistenceFixture(persistence IDummyInterfacablePersistence) *DummyInterfacablePersistenceFixture</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DummyInterfacablePersistenceFixture.TestBatchOperations">func (c *DummyInterfacablePersistenceFixture) TestBatchOperations(t *testing.T)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#DummyInterfacablePersistenceFixture.TestCrudOperations">func (c *DummyInterfacablePersistenceFixture) TestCrudOperations(t *testing.T)</a></dd>
+				
+			
+				
 				<dd><a href="index.html#DummyMap">type DummyMap</a></dd>
 				
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyMap.Clone">func (d DummyMap) Clone() DummyMap</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyMap.GetId">func (d DummyMap) GetId() string</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyMap.IsEqualId">func (d DummyMap) IsEqualId(id string) bool</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyMap.IsZeroId">func (d DummyMap) IsZeroId() bool</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyMap.WithGeneratedId">func (d DummyMap) WithGeneratedId() DummyMap</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyMap.WithId">func (d DummyMap) WithId(id string) DummyMap</a></dd>
 				
 			
 				
@@ -240,24 +257,6 @@
 				<dd><a href="index.html#DummyRef">type DummyRef</a></dd>
 				
 				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyRef.Clone">func (d *DummyRef) Clone() *DummyRef</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyRef.GetId">func (d *DummyRef) GetId() string</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyRef.IsEqualId">func (d *DummyRef) IsEqualId(id string) bool</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyRef.IsZeroId">func (d *DummyRef) IsZeroId() bool</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyRef.WithGeneratedId">func (d *DummyRef) WithGeneratedId() *DummyRef</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="index.html#DummyRef.WithId">func (d *DummyRef) WithId(id string) *DummyRef</a></dd>
-				
 			
 				
 				<dd><a href="index.html#DummyRefFilePersistence">type DummyRefFilePersistence</a></dd>
@@ -299,6 +298,11 @@
 				
 			
 				
+				<dd><a href="index.html#IDummyInterfacablePersistence">type IDummyInterfacablePersistence</a></dd>
+				
+				
+			
+				
 				<dd><a href="index.html#IDummyMapPersistence">type IDummyMapPersistence</a></dd>
 				
 				
@@ -328,6 +332,14 @@
 			
 				<a href="http://localhost:6060/src/test/persistence/DummyFilePersistence.go">DummyFilePersistence.go</a>
 			
+				<a href="http://localhost:6060/src/test/persistence/DummyInterfacable.go">DummyInterfacable.go</a>
+			
+				<a href="http://localhost:6060/src/test/persistence/DummyInterfacableFilePersistence.go">DummyInterfacableFilePersistence.go</a>
+			
+				<a href="http://localhost:6060/src/test/persistence/DummyInterfacableMemoryPersistence.go">DummyInterfacableMemoryPersistence.go</a>
+			
+				<a href="http://localhost:6060/src/test/persistence/DummyInterfacablePersistenceFixture.go">DummyInterfacablePersistenceFixture.go</a>
+			
 				<a href="http://localhost:6060/src/test/persistence/DummyMap.go">DummyMap.go</a>
 			
 				<a href="http://localhost:6060/src/test/persistence/DummyMapFilePersistence.go">DummyMapFilePersistence.go</a>
@@ -347,6 +359,8 @@
 				<a href="http://localhost:6060/src/test/persistence/DummyRefMemoryPersistence.go">DummyRefMemoryPersistence.go</a>
 			
 				<a href="http://localhost:6060/src/test/persistence/DummyRefPersistenceFixture.go">DummyRefPersistenceFixture.go</a>
+			
+				<a href="http://localhost:6060/src/test/persistence/IDummyInterfacablePersistence.go">IDummyInterfacablePersistence.go</a>
 			
 				<a href="http://localhost:6060/src/test/persistence/IDummyMapPersistence.go">IDummyMapPersistence.go</a>
 			
@@ -368,7 +382,7 @@
 		
 			
 			
-			<h2 id="Dummy">type <a href="http://localhost:6060/src/test/persistence/Dummy.go?s=102:213#L1">Dummy</a>
+			<h2 id="Dummy">type <a href="http://localhost:6060/src/test/persistence/Dummy.go?s=26:137#L1">Dummy</a>
 				<a class="permalink" href="index.html#Dummy">&#xb6;</a>
 				
 				
@@ -391,78 +405,6 @@
 
 			
 
-			
-				
-				<h3 id="Dummy.Clone">func (Dummy) <a href="http://localhost:6060/src/test/persistence/Dummy.go?s=215:243#L1">Clone</a>
-					<a class="permalink" href="index.html#Dummy.Clone">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#Dummy">Dummy</a>) Clone() <a href="index.html#Dummy">Dummy</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="Dummy.GetId">func (Dummy) <a href="http://localhost:6060/src/test/persistence/Dummy.go?s=389:418#L13">GetId</a>
-					<a class="permalink" href="index.html#Dummy.GetId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#Dummy">Dummy</a>) GetId() <a href="http://localhost:6060/pkg/builtin/#string">string</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="Dummy.IsEqualId">func (Dummy) <a href="http://localhost:6060/src/test/persistence/Dummy.go?s=324:364#L9">IsEqualId</a>
-					<a class="permalink" href="index.html#Dummy.IsEqualId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#Dummy">Dummy</a>) IsEqualId(id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) <a href="http://localhost:6060/pkg/builtin/#bool">bool</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="Dummy.IsZeroId">func (Dummy) <a href="http://localhost:6060/src/test/persistence/Dummy.go?s=437:467#L17">IsZeroId</a>
-					<a class="permalink" href="index.html#Dummy.IsZeroId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#Dummy">Dummy</a>) IsZeroId() <a href="http://localhost:6060/pkg/builtin/#bool">bool</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="Dummy.WithGeneratedId">func (Dummy) <a href="http://localhost:6060/src/test/persistence/Dummy.go?s=557:595#L26">WithGeneratedId</a>
-					<a class="permalink" href="index.html#Dummy.WithGeneratedId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#Dummy">Dummy</a>) WithGeneratedId() <a href="index.html#Dummy">Dummy</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="Dummy.WithId">func (Dummy) <a href="http://localhost:6060/src/test/persistence/Dummy.go?s=492:530#L21">WithId</a>
-					<a class="permalink" href="index.html#Dummy.WithId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#Dummy">Dummy</a>) WithId(id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) <a href="index.html#Dummy">Dummy</a></pre>
-				
-				
-				
-				
 			
 		
 			
@@ -516,7 +458,239 @@
 		
 			
 			
-			<h2 id="DummyMap">type <a href="http://localhost:6060/src/test/persistence/DummyMap.go?s=96:124#L1">DummyMap</a>
+			<h2 id="DummyInterfacable">type <a href="http://localhost:6060/src/test/persistence/DummyInterfacable.go?s=26:149#L1">DummyInterfacable</a>
+				<a class="permalink" href="index.html#DummyInterfacable">&#xb6;</a>
+				
+				
+			</h2>
+			
+			<pre>type DummyInterfacable struct {
+<span id="DummyInterfacable.Id"></span>    Id      <a href="http://localhost:6060/pkg/builtin/#string">string</a> `json:&#34;id&#34;`
+<span id="DummyInterfacable.Key"></span>    Key     <a href="http://localhost:6060/pkg/builtin/#string">string</a> `json:&#34;key&#34;`
+<span id="DummyInterfacable.Content"></span>    Content <a href="http://localhost:6060/pkg/builtin/#string">string</a> `json:&#34;content&#34;`
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DummyInterfacable.Clone">func (DummyInterfacable) <a href="http://localhost:6060/src/test/persistence/DummyInterfacable.go?s=272:324#L7">Clone</a>
+					<a class="permalink" href="index.html#DummyInterfacable.Clone">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (d <a href="index.html#DummyInterfacable">DummyInterfacable</a>) Clone() <a href="index.html#DummyInterfacable">DummyInterfacable</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DummyInterfacable.GetId">func (DummyInterfacable) <a href="http://localhost:6060/src/test/persistence/DummyInterfacable.go?s=151:192#L1">GetId</a>
+					<a class="permalink" href="index.html#DummyInterfacable.GetId">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (d <a href="index.html#DummyInterfacable">DummyInterfacable</a>) GetId() <a href="http://localhost:6060/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DummyInterfacable.SetId">func (*DummyInterfacable) <a href="http://localhost:6060/src/test/persistence/DummyInterfacable.go?s=211:255#L3">SetId</a>
+					<a class="permalink" href="index.html#DummyInterfacable.SetId">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (d *<a href="index.html#DummyInterfacable">DummyInterfacable</a>) SetId(id <a href="http://localhost:6060/pkg/builtin/#string">string</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DummyInterfacableFilePersistence">type <a href="http://localhost:6060/src/test/persistence/DummyInterfacableFilePersistence.go?s=196:338#L1">DummyInterfacableFilePersistence</a>
+				<a class="permalink" href="index.html#DummyInterfacableFilePersistence">&#xb6;</a>
+				
+				
+			</h2>
+			
+			<pre>type DummyInterfacableFilePersistence struct {
+    <a href="index.html#DummyInterfacableMemoryPersistence">DummyInterfacableMemoryPersistence</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewDummyInterfacableFilePersistence">func <a href="http://localhost:6060/src/test/persistence/DummyInterfacableFilePersistence.go?s=340:427#L4">NewDummyInterfacableFilePersistence</a>
+					<a class="permalink" href="index.html#NewDummyInterfacableFilePersistence">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func NewDummyInterfacableFilePersistence(path <a href="http://localhost:6060/pkg/builtin/#string">string</a>) *<a href="index.html#DummyInterfacableFilePersistence">DummyInterfacableFilePersistence</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="DummyInterfacableFilePersistence.Configure">func (*DummyInterfacableFilePersistence) <a href="http://localhost:6060/src/test/persistence/DummyInterfacableFilePersistence.go?s=704:805#L15">Configure</a>
+					<a class="permalink" href="index.html#DummyInterfacableFilePersistence.Configure">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#DummyInterfacableFilePersistence">DummyInterfacableFilePersistence</a>) Configure(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, config *<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/config/">cconf</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/config/#ConfigParams">ConfigParams</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DummyInterfacableMemoryPersistence">type <a href="http://localhost:6060/src/test/persistence/DummyInterfacableMemoryPersistence.go?s=194:311#L1">DummyInterfacableMemoryPersistence</a>
+				<a class="permalink" href="index.html#DummyInterfacableMemoryPersistence">&#xb6;</a>
+				
+				
+			</h2>
+			
+			<pre>type DummyInterfacableMemoryPersistence struct {
+    <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-data-gox/persistence/">cpersist</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-data-gox/persistence/#IdentifiableMemoryPersistence">IdentifiableMemoryPersistence</a>[<a href="index.html#DummyInterfacable">DummyInterfacable</a>, <a href="http://localhost:6060/pkg/builtin/#string">string</a>]
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewDummyInterfacableMemoryPersistence">func <a href="http://localhost:6060/src/test/persistence/DummyInterfacableMemoryPersistence.go?s=313:393#L3">NewDummyInterfacableMemoryPersistence</a>
+					<a class="permalink" href="index.html#NewDummyInterfacableMemoryPersistence">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func NewDummyInterfacableMemoryPersistence() *<a href="index.html#DummyInterfacableMemoryPersistence">DummyInterfacableMemoryPersistence</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="DummyInterfacableMemoryPersistence.GetCountByFilter">func (*DummyInterfacableMemoryPersistence) <a href="http://localhost:6060/src/test/persistence/DummyInterfacableMemoryPersistence.go?s=1124:1280#L33">GetCountByFilter</a>
+					<a class="permalink" href="index.html#DummyInterfacableMemoryPersistence.GetCountByFilter">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#DummyInterfacableMemoryPersistence">DummyInterfacableMemoryPersistence</a>) GetCountByFilter(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, filter <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#FilterParams">FilterParams</a>) (count <a href="http://localhost:6060/pkg/builtin/#int64">int64</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DummyInterfacableMemoryPersistence.GetPageByFilter">func (*DummyInterfacableMemoryPersistence) <a href="http://localhost:6060/src/test/persistence/DummyInterfacableMemoryPersistence.go?s=522:722#L9">GetPageByFilter</a>
+					<a class="permalink" href="index.html#DummyInterfacableMemoryPersistence.GetPageByFilter">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#DummyInterfacableMemoryPersistence">DummyInterfacableMemoryPersistence</a>) GetPageByFilter(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, filter <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#FilterParams">FilterParams</a>, paging <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#PagingParams">PagingParams</a>) (<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#DataPage">DataPage</a>[<a href="index.html#DummyInterfacable">DummyInterfacable</a>], <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DummyInterfacablePersistenceFixture">type <a href="http://localhost:6060/src/test/persistence/DummyInterfacablePersistenceFixture.go?s=168:324#L1">DummyInterfacablePersistenceFixture</a>
+				<a class="permalink" href="index.html#DummyInterfacablePersistenceFixture">&#xb6;</a>
+				
+				
+			</h2>
+			
+			<pre>type DummyInterfacablePersistenceFixture struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewDummyInterfacablePersistenceFixture">func <a href="http://localhost:6060/src/test/persistence/DummyInterfacablePersistenceFixture.go?s=326:449#L7">NewDummyInterfacablePersistenceFixture</a>
+					<a class="permalink" href="index.html#NewDummyInterfacablePersistenceFixture">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func NewDummyInterfacablePersistenceFixture(persistence <a href="index.html#IDummyInterfacablePersistence">IDummyInterfacablePersistence</a>) *<a href="index.html#DummyInterfacablePersistenceFixture">DummyInterfacablePersistenceFixture</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="DummyInterfacablePersistenceFixture.TestBatchOperations">func (*DummyInterfacablePersistenceFixture) <a href="http://localhost:6060/src/test/persistence/DummyInterfacablePersistenceFixture.go?s=4211:4290#L121">TestBatchOperations</a>
+					<a class="permalink" href="index.html#DummyInterfacablePersistenceFixture.TestBatchOperations">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#DummyInterfacablePersistenceFixture">DummyInterfacablePersistenceFixture</a>) TestBatchOperations(t *<a href="http://localhost:6060/pkg/testing/">testing</a>.<a href="http://localhost:6060/pkg/testing/#T">T</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DummyInterfacablePersistenceFixture.TestCrudOperations">func (*DummyInterfacablePersistenceFixture) <a href="http://localhost:6060/src/test/persistence/DummyInterfacablePersistenceFixture.go?s=688:766#L15">TestCrudOperations</a>
+					<a class="permalink" href="index.html#DummyInterfacablePersistenceFixture.TestCrudOperations">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#DummyInterfacablePersistenceFixture">DummyInterfacablePersistenceFixture</a>) TestCrudOperations(t *<a href="http://localhost:6060/pkg/testing/">testing</a>.<a href="http://localhost:6060/pkg/testing/#T">T</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DummyMap">type <a href="http://localhost:6060/src/test/persistence/DummyMap.go?s=26:54#L1">DummyMap</a>
 				<a class="permalink" href="index.html#DummyMap">&#xb6;</a>
 				
 				
@@ -534,78 +708,6 @@
 
 			
 
-			
-				
-				<h3 id="DummyMap.Clone">func (DummyMap) <a href="http://localhost:6060/src/test/persistence/DummyMap.go?s=126:160#L1">Clone</a>
-					<a class="permalink" href="index.html#DummyMap.Clone">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#DummyMap">DummyMap</a>) Clone() <a href="index.html#DummyMap">DummyMap</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyMap.GetId">func (DummyMap) <a href="http://localhost:6060/src/test/persistence/DummyMap.go?s=394:426#L14">GetId</a>
-					<a class="permalink" href="index.html#DummyMap.GetId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#DummyMap">DummyMap</a>) GetId() <a href="http://localhost:6060/pkg/builtin/#string">string</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyMap.IsEqualId">func (DummyMap) <a href="http://localhost:6060/src/test/persistence/DummyMap.go?s=240:283#L5">IsEqualId</a>
-					<a class="permalink" href="index.html#DummyMap.IsEqualId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#DummyMap">DummyMap</a>) IsEqualId(id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) <a href="http://localhost:6060/pkg/builtin/#bool">bool</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyMap.IsZeroId">func (DummyMap) <a href="http://localhost:6060/src/test/persistence/DummyMap.go?s=528:561#L23">IsZeroId</a>
-					<a class="permalink" href="index.html#DummyMap.IsZeroId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#DummyMap">DummyMap</a>) IsZeroId() <a href="http://localhost:6060/pkg/builtin/#bool">bool</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyMap.WithGeneratedId">func (DummyMap) <a href="http://localhost:6060/src/test/persistence/DummyMap.go?s=746:790#L37">WithGeneratedId</a>
-					<a class="permalink" href="index.html#DummyMap.WithGeneratedId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#DummyMap">DummyMap</a>) WithGeneratedId() <a href="index.html#DummyMap">DummyMap</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyMap.WithId">func (DummyMap) <a href="http://localhost:6060/src/test/persistence/DummyMap.go?s=672:716#L32">WithId</a>
-					<a class="permalink" href="index.html#DummyMap.WithId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d <a href="index.html#DummyMap">DummyMap</a>) WithId(id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) <a href="index.html#DummyMap">DummyMap</a></pre>
-				
-				
-				
-				
 			
 		
 			
@@ -755,7 +857,7 @@
 
 			
 				
-				<h3 id="DummyMapPersistenceFixture.TestBatchOperations">func (*DummyMapPersistenceFixture) <a href="http://localhost:6060/src/test/persistence/DummyMapPersistenceFixture.go?s=3840:3910#L110">TestBatchOperations</a>
+				<h3 id="DummyMapPersistenceFixture.TestBatchOperations">func (*DummyMapPersistenceFixture) <a href="http://localhost:6060/src/test/persistence/DummyMapPersistenceFixture.go?s=3866:3936#L109">TestBatchOperations</a>
 					<a class="permalink" href="index.html#DummyMapPersistenceFixture.TestBatchOperations">&#xb6;</a>
 					
 					
@@ -875,7 +977,7 @@
 
 			
 				
-				<h3 id="DummyPersistenceFixture.TestBatchOperations">func (*DummyPersistenceFixture) <a href="http://localhost:6060/src/test/persistence/DummyPersistenceFixture.go?s=3985:4052#L121">TestBatchOperations</a>
+				<h3 id="DummyPersistenceFixture.TestBatchOperations">func (*DummyPersistenceFixture) <a href="http://localhost:6060/src/test/persistence/DummyPersistenceFixture.go?s=4043:4110#L121">TestBatchOperations</a>
 					<a class="permalink" href="index.html#DummyPersistenceFixture.TestBatchOperations">&#xb6;</a>
 					
 					
@@ -901,7 +1003,7 @@
 		
 			
 			
-			<h2 id="DummyRef">type <a href="http://localhost:6060/src/test/persistence/DummyRef.go?s=96:210#L1">DummyRef</a>
+			<h2 id="DummyRef">type <a href="http://localhost:6060/src/test/persistence/DummyRef.go?s=26:140#L1">DummyRef</a>
 				<a class="permalink" href="index.html#DummyRef">&#xb6;</a>
 				
 				
@@ -924,78 +1026,6 @@
 
 			
 
-			
-				
-				<h3 id="DummyRef.Clone">func (*DummyRef) <a href="http://localhost:6060/src/test/persistence/DummyRef.go?s=212:248#L1">Clone</a>
-					<a class="permalink" href="index.html#DummyRef.Clone">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d *<a href="index.html#DummyRef">DummyRef</a>) Clone() *<a href="index.html#DummyRef">DummyRef</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyRef.GetId">func (*DummyRef) <a href="http://localhost:6060/src/test/persistence/DummyRef.go?s=402:435#L13">GetId</a>
-					<a class="permalink" href="index.html#DummyRef.GetId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d *<a href="index.html#DummyRef">DummyRef</a>) GetId() <a href="http://localhost:6060/pkg/builtin/#string">string</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyRef.IsEqualId">func (*DummyRef) <a href="http://localhost:6060/src/test/persistence/DummyRef.go?s=333:377#L9">IsEqualId</a>
-					<a class="permalink" href="index.html#DummyRef.IsEqualId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d *<a href="index.html#DummyRef">DummyRef</a>) IsEqualId(id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) <a href="http://localhost:6060/pkg/builtin/#bool">bool</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyRef.IsZeroId">func (*DummyRef) <a href="http://localhost:6060/src/test/persistence/DummyRef.go?s=454:488#L17">IsZeroId</a>
-					<a class="permalink" href="index.html#DummyRef.IsZeroId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d *<a href="index.html#DummyRef">DummyRef</a>) IsZeroId() <a href="http://localhost:6060/pkg/builtin/#bool">bool</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyRef.WithGeneratedId">func (*DummyRef) <a href="http://localhost:6060/src/test/persistence/DummyRef.go?s=586:632#L26">WithGeneratedId</a>
-					<a class="permalink" href="index.html#DummyRef.WithGeneratedId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d *<a href="index.html#DummyRef">DummyRef</a>) WithGeneratedId() *<a href="index.html#DummyRef">DummyRef</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="DummyRef.WithId">func (*DummyRef) <a href="http://localhost:6060/src/test/persistence/DummyRef.go?s=513:559#L21">WithId</a>
-					<a class="permalink" href="index.html#DummyRef.WithId">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (d *<a href="index.html#DummyRef">DummyRef</a>) WithId(id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) *<a href="index.html#DummyRef">DummyRef</a></pre>
-				
-				
-				
-				
 			
 		
 			
@@ -1150,7 +1180,7 @@ implements IDummyPersistence {
 
 			
 				
-				<h3 id="DummyRefPersistenceFixture.TestBatchOperations">func (*DummyRefPersistenceFixture) <a href="http://localhost:6060/src/test/persistence/DummyRefPersistenceFixture.go?s=3719:3789#L110">TestBatchOperations</a>
+				<h3 id="DummyRefPersistenceFixture.TestBatchOperations">func (*DummyRefPersistenceFixture) <a href="http://localhost:6060/src/test/persistence/DummyRefPersistenceFixture.go?s=3717:3787#L109">TestBatchOperations</a>
 					<a class="permalink" href="index.html#DummyRefPersistenceFixture.TestBatchOperations">&#xb6;</a>
 					
 					
@@ -1172,6 +1202,38 @@ implements IDummyPersistence {
 				
 				
 				
+			
+		
+			
+			
+			<h2 id="IDummyInterfacablePersistence">type <a href="http://localhost:6060/src/test/persistence/IDummyInterfacablePersistence.go?s=118:1198#L1">IDummyInterfacablePersistence</a>
+				<a class="permalink" href="index.html#IDummyInterfacablePersistence">&#xb6;</a>
+				
+				
+			</h2>
+			
+			<pre>type IDummyInterfacablePersistence interface {
+    GetPageByFilter(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, filter <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#FilterParams">FilterParams</a>, paging <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#PagingParams">PagingParams</a>) (page <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#DataPage">DataPage</a>[<a href="index.html#DummyInterfacable">DummyInterfacable</a>], err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    GetListByIds(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, ids []<a href="http://localhost:6060/pkg/builtin/#string">string</a>) (items []<a href="index.html#DummyInterfacable">DummyInterfacable</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    GetOneById(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (item <a href="index.html#DummyInterfacable">DummyInterfacable</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    Create(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item <a href="index.html#DummyInterfacable">DummyInterfacable</a>) (result <a href="index.html#DummyInterfacable">DummyInterfacable</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    Update(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, item <a href="index.html#DummyInterfacable">DummyInterfacable</a>) (result <a href="index.html#DummyInterfacable">DummyInterfacable</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    UpdatePartially(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id <a href="http://localhost:6060/pkg/builtin/#string">string</a>, data <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#AnyValueMap">AnyValueMap</a>) (item <a href="index.html#DummyInterfacable">DummyInterfacable</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    DeleteById(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, id <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (item <a href="index.html#DummyInterfacable">DummyInterfacable</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    DeleteByIds(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, ids []<a href="http://localhost:6060/pkg/builtin/#string">string</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+    GetCountByFilter(ctx <a href="http://localhost:6060/pkg/context/">context</a>.<a href="http://localhost:6060/pkg/context/#Context">Context</a>, correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, filter <a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/">cdata</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-gox/pip-services3-commons-gox/data/#FilterParams">FilterParams</a>) (count <a href="http://localhost:6060/pkg/builtin/#int64">int64</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
 			
 		
 			
@@ -1281,7 +1343,7 @@ implements IDummyPersistence {
 
 
 <div id="footer">
-Build version go1.18.2.<br>
+Build version go1.18.3.<br>
 Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
 the content of this page is licensed under the
 Creative Commons Attribution 3.0 License,
