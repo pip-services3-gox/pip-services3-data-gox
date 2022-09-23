@@ -11,7 +11,7 @@ type ISaver[T any] interface {
 
 	// Save given data items.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId string transaction id to trace execution through call chain.
 	//		- items []T a list of items to save.
 	//	Returns: error or nil for success.

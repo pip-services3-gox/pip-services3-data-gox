@@ -136,7 +136,7 @@ func SetProperty(obj any, name string, value any) {
 	defer func() {
 		// Do nothing and return nil
 		if err := recover(); err != nil {
-			fmt.Println("Error while set property %v", err)
+			fmt.Printf("Error while set property %v", err)
 		}
 	}()
 

@@ -11,11 +11,11 @@ The module contains the following packages:
 
 <a name="links"></a> Quick links:
 
-* [Memory persistence](https://www.pipservices.org/recipies/memory-persistence)
+* [Memory persistence](http://docs.pipservices.org/conceptual/persistences/memory_persistence/)
 * [API Reference](https://godoc.org/github.com/pip-services3-gox/pip-services3-data-gox/)
 * [Change Log](CHANGELOG.md)
-* [Get Help](https://www.pipservices.org/community/help)
-* [Contribute](https://www.pipservices.org/community/contribute)
+* [Get Help](http://docs.pipservices.org/get_help/)
+* [Contribute](http://docs.pipservices.org/contribute/)
 
 
 ## Use

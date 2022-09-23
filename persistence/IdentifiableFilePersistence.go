@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+
 	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
 )
 
@@ -27,13 +28,15 @@ import (
 //		- path: path to the file where data is stored
 //		- options:
 //		- max_page_size: Maximum number of items returned in a single page (default: 100)
+//
 //	References:
 //		- *:logger:*:*:1.0 (optional)  ILogger components to pass log messages
 //	Typed params:
 //		- T cdata.IDataObject[T, K] any type that implemented
 //			IDataObject interface of getting element
 //		- K any type if id (key)
-//	Examples:
+//
+//	Example:
 //		type MyFilePersistence struct {
 //			IdentifiableFilePersistence[MyData, MyId]
 //		}
@@ -72,7 +75,7 @@ import (
 //		_data, _ := page.Data()
 //      fmt.Println(_data)   // Result: { Id: "1", Name: "ABC" )
 type IdentifiableFilePersistence[T any, K any] struct {
-	IdentifiableMemoryPersistence[T, K]
+	*IdentifiableMemoryPersistence[T, K]
 	Persister *JsonFilePersister[T]
 }
 
@@ -89,7 +92,7 @@ func NewIdentifiableFilePersistence[T any, K any](persister *JsonFilePersister[T
 	if persister == nil {
 		persister = NewJsonFilePersister[T]("")
 	}
-	c.IdentifiableMemoryPersistence = *NewIdentifiableMemoryPersistence[T, K]()
+	c.IdentifiableMemoryPersistence = NewIdentifiableMemoryPersistence[T, K]()
 	c.Loader = persister
 	c.Saver = persister
 	c.Persister = persister
@@ -101,6 +104,5 @@ func NewIdentifiableFilePersistence[T any, K any](persister *JsonFilePersister[T
 //		- ctx context.Context
 //		- config *config.ConfigParams configuration parameters to be set.
 func (c *IdentifiableFilePersistence[T, K]) Configure(ctx context.Context, config *config.ConfigParams) {
-	c.Configure(ctx, config)
 	c.Persister.Configure(ctx, config)
 }

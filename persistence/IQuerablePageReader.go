@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
 
@@ -12,7 +13,7 @@ type IQuerablePageReader[T any] interface {
 
 	// GetPageByQuery gets a page of data items using a query string.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId string transaction id to trace execution through call chain.
 	//		- query string a query string
 	//		- paging data.PagingParams paging parameters

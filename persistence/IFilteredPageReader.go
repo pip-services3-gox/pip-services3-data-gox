@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
 
@@ -13,7 +14,7 @@ type IFilteredPageReader[T any] interface {
 
 	// GetPageByFilter gets a page of data items using filter
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId transaction id to trace execution through call chain.
 	//		- filter  data.FilterParams filter parameters
 	//		- paging data.PagingParams paging parameters

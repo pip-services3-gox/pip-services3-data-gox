@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
 
@@ -13,7 +14,7 @@ type IPartialUpdater[T any, K any] interface {
 
 	// UpdatePartially updates only few selected fields in a data item.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId string transaction id to trace execution through call chain.
 	//		- id K an id of data item to be updated.
 	//		- data data.AnyValueMap a map with fields to be updated.

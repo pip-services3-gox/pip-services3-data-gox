@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+
 	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
@@ -47,7 +48,7 @@ import (
 //	Extends: MemoryPersistence
 //	Implements: IConfigurable
 type FilePersistence[T cdata.ICloneable[T]] struct {
-	MemoryPersistence[T]
+	*MemoryPersistence[T]
 	Persister *JsonFilePersister[T]
 }
 
@@ -60,7 +61,7 @@ type FilePersistence[T cdata.ICloneable[T]] struct {
 // Returns: *FilePersistence[T] pointer on new FilePersistence instance
 func NewFilePersistence[T cdata.ICloneable[T]](persister *JsonFilePersister[T]) *FilePersistence[T] {
 	c := &FilePersistence[T]{}
-	c.MemoryPersistence = *NewMemoryPersistence[T]()
+	c.MemoryPersistence = NewMemoryPersistence[T]()
 	if persister == nil {
 		persister = NewJsonFilePersister[T]("")
 	}

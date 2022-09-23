@@ -13,7 +13,7 @@ type IWriter[T any, K any] interface {
 
 	// Create creates a data item.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId string transaction id to trace execution through call chain.
 	//		- item T an item to be created.
 	//	Returns: T, error created item or error.
@@ -21,7 +21,7 @@ type IWriter[T any, K any] interface {
 
 	// Update a data item.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId  string transaction id to trace execution through call chain.
 	//		- item T an item to be updated.
 	//	Returns: T, error updated item or error.
@@ -29,7 +29,7 @@ type IWriter[T any, K any] interface {
 
 	// DeleteById a data item by it's unique id.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId string transaction id to trace execution through call chain.
 	//		- id K an id of the item to be deleted
 	//	Returns: T, error deleted item or error.

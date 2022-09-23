@@ -2,11 +2,12 @@ package persistence
 
 import (
 	"context"
+	"io/ioutil"
+	"os"
+
 	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
 	"github.com/pip-services3-gox/pip-services3-commons-gox/convert"
 	"github.com/pip-services3-gox/pip-services3-commons-gox/errors"
-	"io/ioutil"
-	"os"
 )
 
 // JsonFilePersister is a persistence component that loads and saves data from/to flat file.
@@ -51,14 +52,15 @@ func (c *JsonFilePersister[T]) Path() string {
 }
 
 // SetPath the file path where data is stored.
-// Parameters: value string the file path where data is stored.
+//	Parameters:
+//		- value string the file path where data is stored.
 func (c *JsonFilePersister[T]) SetPath(value string) {
 	c.path = value
 }
 
 // Configure component by passing configuration parameters.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- config: ConfigParams configuration parameters to be set.
 func (c *JsonFilePersister[T]) Configure(ctx context.Context, config *config.ConfigParams) {
 	c.path = config.GetAsStringWithDefault(ConfigParamPath, c.path)
@@ -66,7 +68,7 @@ func (c *JsonFilePersister[T]) Configure(ctx context.Context, config *config.Con
 
 // Load data items from external JSON file.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string transaction id to trace execution through call chain.
 // Returns: []T, error loaded items or error.
 func (c *JsonFilePersister[T]) Load(ctx context.Context, correlationId string) ([]T, error) {
@@ -100,7 +102,7 @@ func (c *JsonFilePersister[T]) Load(ctx context.Context, correlationId string) (
 
 // Save given data items to external JSON file.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string transaction id to trace execution through call chain.
 //		- items []T list of data items to save
 //  Returns: error or nil for success.

@@ -9,7 +9,7 @@ type ILoader[T any] interface {
 
 	// Load data items.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId string transaction id to trace execution through call chain.
 	//	Returns: []T, error a list of data items or error.
 	Load(ctx context.Context, correlationId string) (items []T, err error)

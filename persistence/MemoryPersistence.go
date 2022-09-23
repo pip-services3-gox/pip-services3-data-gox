@@ -2,11 +2,12 @@ package persistence
 
 import (
 	"context"
-	"github.com/pip-services3-gox/pip-services3-commons-gox/convert"
 	"math/rand"
 	"sort"
 	"sync"
 	"time"
+
+	"github.com/pip-services3-gox/pip-services3-commons-gox/convert"
 
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 	"github.com/pip-services3-gox/pip-services3-commons-gox/refer"
@@ -90,7 +91,7 @@ func (c *MemoryPersistence[T]) IsOpen() bool {
 
 // Open the component.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId  string (optional) transaction id to trace execution through call chain.
 //	Returns: error or null no errors occurred.
 func (c *MemoryPersistence[T]) Open(ctx context.Context, correlationId string) error {
@@ -116,7 +117,7 @@ func (c *MemoryPersistence[T]) Open(ctx context.Context, correlationId string) e
 
 // Close component and frees used resources.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId  string (optional) transaction id to trace execution through call chain.
 //	Returns: error or null no errors occurred.
 func (c *MemoryPersistence[T]) Close(ctx context.Context, correlationId string) error {
@@ -129,7 +130,7 @@ func (c *MemoryPersistence[T]) Close(ctx context.Context, correlationId string) 
 
 // Save items to external data source using configured saver component.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId  string (optional) transaction id to trace execution through call chain.
 //	Returns: error or null for success.
 func (c *MemoryPersistence[T]) Save(ctx context.Context, correlationId string) error {
@@ -150,7 +151,7 @@ func (c *MemoryPersistence[T]) Save(ctx context.Context, correlationId string) e
 
 // Clear component state.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId  string (optional) transaction id to trace execution through call chain.
 //	Returns: error or null no errors occurred.
 func (c *MemoryPersistence[T]) Clear(ctx context.Context, correlationId string) error {
@@ -245,7 +246,7 @@ func (c *MemoryPersistence[T]) GetPageByFilter(ctx context.Context, correlationI
 // GetListByFilter method from child struct that
 // receives FilterParams and converts them into a filter function.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- filter func(T) bool (optional) a filter function to filter items
 //		- sortFunc func(a, b T) bool (optional) sorting compare function
@@ -302,7 +303,7 @@ func (c *MemoryPersistence[T]) GetListByFilter(ctx context.Context, correlationI
 // This method shall be called by a func (c* IdentifiableMemoryPersistence) GetOneRandom method from child type that
 // receives FilterParams and converts them into a filter function.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- filter func(T) bool (optional) a filter function to filter items.
 //	Returns: T, error random item or error.
@@ -338,6 +339,9 @@ func (c *MemoryPersistence[T]) GetOneRandom(ctx context.Context, correlationId s
 		c.Logger.Trace(ctx, correlationId, "Retrieved a random item")
 	} else {
 		c.Logger.Trace(ctx, correlationId, "Nothing to return as random item")
+
+		var defaultValue T
+		return defaultValue, nil
 	}
 
 	return *item, nil
@@ -345,7 +349,7 @@ func (c *MemoryPersistence[T]) GetOneRandom(ctx context.Context, correlationId s
 
 // Create a data item.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- item T an item to be created.
 //	Returns: T, error created item or error.
@@ -371,7 +375,7 @@ func (c *MemoryPersistence[T]) Create(ctx context.Context, correlationId string,
 // DeleteByFilter method from child struct that
 // receives FilterParams and converts them into a filter function.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId  string (optional) transaction id to trace execution through call chain.
 //		- filter  filter func(T) bool (optional) a filter function to filter items.
 //	Returns: error or nil for success.
@@ -409,7 +413,7 @@ func (c *MemoryPersistence[T]) DeleteByFilter(ctx context.Context, correlationId
 // getCountByFilter method from child struct that
 // receives FilterParams and converts them into a filter function.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string transaction id to trace execution through call chain.
 //		- filter func(T) bool (optional) a filter function to filter items
 //	Return int64, error data count or error.

@@ -2,12 +2,13 @@ package persistence
 
 import (
 	"context"
+	"reflect"
+	"sync"
+
 	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 	refl "github.com/pip-services3-gox/pip-services3-commons-gox/reflect"
 	"github.com/pip-services3-gox/pip-services3-components-gox/log"
-	"reflect"
-	"sync"
 )
 
 // IdentifiableMemoryPersistence Abstract persistence component that stores data in memory
@@ -70,7 +71,7 @@ import (
 //	Extends: MemoryPersistence
 //	Implements: IConfigurable, IWriter, IGetter, ISetter
 type IdentifiableMemoryPersistence[T any, K any] struct {
-	MemoryPersistence[T]
+	*MemoryPersistence[T]
 	Mtx sync.RWMutex
 }
 
@@ -84,7 +85,7 @@ const IdentifiableMemoryPersistenceConfigParamOptionsMaxPageSize = "options.max_
 // Returns: *IdentifiableMemoryPersistence created empty IdentifiableMemoryPersistence
 func NewIdentifiableMemoryPersistence[T any, K any]() (c *IdentifiableMemoryPersistence[T, K]) {
 	c = &IdentifiableMemoryPersistence[T, K]{
-		MemoryPersistence: *NewMemoryPersistence[T](),
+		MemoryPersistence: NewMemoryPersistence[T](),
 	}
 	c.Logger = log.NewCompositeLogger()
 	c.MaxPageSize = 100
@@ -93,7 +94,7 @@ func NewIdentifiableMemoryPersistence[T any, K any]() (c *IdentifiableMemoryPers
 
 // Configure component by passing configuration parameters.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- config *config.ConfigParams configuration parameters to be set.
 func (c *IdentifiableMemoryPersistence[T, K]) Configure(ctx context.Context, config *config.ConfigParams) {
 	c.MaxPageSize = config.GetAsIntegerWithDefault(IdentifiableMemoryPersistenceConfigParamOptionsMaxPageSize, c.MaxPageSize)
@@ -101,7 +102,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) Configure(ctx context.Context, con
 
 // GetListByIds gets a list of data items retrieved by given unique ids.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- ids []K ids of data items to be retrieved
 //	Returns: []T, error data list or error.
@@ -122,7 +123,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) GetListByIds(ctx context.Context, 
 
 // GetOneById gets a data item by its unique id.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- id K an id of data item to be retrieved.
 // Returns: T, error data item or error.
@@ -146,6 +147,8 @@ func (c *IdentifiableMemoryPersistence[T, K]) GetOneById(ctx context.Context, co
 }
 
 // GetIndexById get index by "Id" field
+//	Parameters:
+//		- id K id parameter of data struct
 //	Returns: index number
 func (c *IdentifiableMemoryPersistence[T, K]) GetIndexById(id K) int {
 	c.Mtx.RLock()
@@ -161,7 +164,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) GetIndexById(id K) int {
 
 // Create a data item.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- item T an item to be created.
 //	Returns: T, error created item or error.
@@ -188,7 +191,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) Create(ctx context.Context, correl
 // Set a data item. If the data item exists it updates it,
 // otherwise it creates a new data item.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- item T a item to be set.
 // Returns: T, error updated item or error.
@@ -219,7 +222,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) Set(ctx context.Context, correlati
 
 // Update a data item.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- item T an item to be updated.
 // Returns: T, error updated item or error.
@@ -248,6 +251,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) Update(ctx context.Context, correl
 
 // UpdatePartially only few selected fields in a data item.
 //	Parameters:
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- id K an id of data item to be updated.
 //		- data  cdata.AnyValueMap a map with fields to be updated.
@@ -296,6 +300,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) UpdatePartially(ctx context.Contex
 
 // DeleteById a data item by it's unique id.
 //	Parameters:
+//		- ctx context.Context	operation context
 //		- correlationId string (optional) transaction id to trace execution through call chain.
 //		- id K an id of the item to be deleted
 //	Returns: T, error deleted item or error.
@@ -330,7 +335,7 @@ func (c *IdentifiableMemoryPersistence[T, K]) DeleteById(ctx context.Context, co
 
 // DeleteByIds multiple data items by their unique ids.
 //	Parameters:
-//		- ctx context.Context
+//		- ctx context.Context	operation context
 //		- correlationId  string (optional) transaction id to trace execution through call chain.
 //		- ids []K ids of data items to be deleted.
 //	Returns: error or null for success.

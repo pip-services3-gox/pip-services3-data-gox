@@ -13,7 +13,7 @@ type ISetter[T any, K any] interface {
 	// Set a data item. If the data item exists it updates it,
 	// otherwise it create a new data item.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId string transaction id to trace execution through call chain.
 	//		- item T is an item to be set.
 	//	Returns: T, error updated item or error.

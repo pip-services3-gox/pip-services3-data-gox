@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+
 	cdata "github.com/pip-services3-gox/pip-services3-commons-gox/data"
 )
 
@@ -12,7 +13,7 @@ type IQuerableReader[T any] interface {
 
 	// GetListByQuery gets a list of data items using a query string.
 	//	Parameters:
-	//		- ctx context.Context
+	//		- ctx context.Context	operation context
 	//		- correlationId  string transaction id to trace execution through call chain.
 	//		- query string a query string
 	//		- sort data.SortParams sort parameters
