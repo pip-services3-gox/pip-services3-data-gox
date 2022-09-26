@@ -35,18 +35,20 @@ import (
 //			ICloneable interface of getting element
 //	Example:
 //		type MyMemoryPersistence struct {
-//			MemoryPersistence[MyData]
+//			*MemoryPersistence[MyData]
 //		}
-//		func (c * MyMemoryPersistence) GetByName(ctx context.Context, correlationId string,
-//			name string)(MyData, error) {
+//
+//		func (c *MyMemoryPersistence) GetByName(ctx context.Context, correlationId string,
+//			name string) (MyData, error) {
 //			for _, v := range c.Items {
 //				if v.Name == name {
 //					return v
 //				}
 //			}
-//			var default T
-//			return item, nil
+//			var defaultValue T
+//			return defaultValue, nil
 //		}
+//
 //	Implements: IReferenceable, IOpenable, ICleanable
 type MemoryPersistence[T any] struct {
 	Logger      *log.CompositeLogger

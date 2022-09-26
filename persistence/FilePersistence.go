@@ -28,22 +28,35 @@ import (
 //
 //	Example:
 //		type MyJsonFilePersistence struct {
-//			FilePersistence[MyData]
+//			*FilePersistence[*MyData]
 //		}
-//		func NewMyJsonFilePersistence(path string) *NewMyJsonFilePersistence {
-//  		return &NewFilePersistence[MyData](NewJsonPersister[MyData](path))
+//
+//		func NewMyJsonFilePersistence(path string) *MyJsonFilePersistence {
+//			return &MyJsonFilePersistence{
+//				FilePersistence: NewFilePersistence(NewJsonFilePersister[*MyData](path)),
+//			}
 //		}
+//
 //		func (c *MyJsonFilePersistence) GetByName(ctx context.Context, correlationId string,
-//			name string) (MyData, error){
-//  			for _,v := range c.Items {
-//  				if v.Name == name {
-//  					return v
-//  				}
-//  			}
-//				var default T
-//          	return default, nil
+//			name string) (*MyData, error) {
+//			for _, v := range c.Items {
+//				if v.Name == name {
+//					return v, nil
+//				}
+//			}
+//
+//			var defaultValue *MyData
+//			return defaultValue, nil
 //		}
-//  }
+//
+//		func (c *MyData) Clone() *MyData {
+//			return &MyData{Id: c.Id, Name: c.Name}
+//		}
+//
+//		type MyData struct {
+//			Id   string
+//			Name string
+//		}
 //
 //	Extends: MemoryPersistence
 //	Implements: IConfigurable

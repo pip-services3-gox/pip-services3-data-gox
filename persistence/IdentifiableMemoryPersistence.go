@@ -37,36 +37,51 @@ import (
 //			IDataObject interface of getting element
 //		- K any type if id (key)
 //	Examples:
-//		type MyMemoryPersistence struct{
-//			IdentifiableMemoryPersistence[MyData, MyId]
+//		type MyMemoryPersistence struct {
+//			*IdentifiableMemoryPersistence[*MyData, string]
 //		}
-//      func (mmp *MyMemoryPersistence) composeFilter(filter cdata.FilterParams) (func (item MyData) bool) {
-//			name, _ := filter.getAsNullableString("Name");
-//			return func(item MyData) bool {
-//				if (name != "" && item.Name != name) {
-//					return false;
+//
+//		func NewMyMemoryPersistence() *MyMemoryPersistence {
+//			return &MyMemoryPersistence{IdentifiableMemoryPersistence: NewIdentifiableMemoryPersistence[*MyData, string]()}
+//		}
+//		func (c *MyMemoryPersistence) composeFilter(filter cdata.FilterParams) func(item *MyData) bool {
+//			name, _ := filter.GetAsNullableString("Name")
+//			return func(item *MyData) bool {
+//				if name != "" && item.Name != name {
+//					return false
 //				}
-//				return true;
+//				return true
 //			}
 //		}
 //
-//		func (mmp * MyMemoryPersistence) GetPageByFilter(ctx context.Context, correlationId string,
-//			filter FilterParams, paging PagingParams) (page cdata.BataPage[MyData], err error) {
-//          return c.GetPageByFilter(ctx, correlationId, mmp.composeFilter(filter), paging, nil, nil)
+//		func (c *MyMemoryPersistence) GetPageByFilter(ctx context.Context, correlationId string,
+//			filter FilterParams, paging PagingParams) (page cdata.DataPage[*MyData], err error) {
+//			return c.GetPageByFilter(ctx, correlationId, c.composeFilter(filter), paging, nil, nil)
 //		}
 //
-//		persistence := NewMyMemoryPersistence();
+//		func f() {
+//			persistence := NewMyMemoryPersistence()
 //
-//		item, err := persistence.Create(context.Background(), "123", { Id: "1", Name: "ABC" })
-//		...
-//		page, err := persistence.GetPageByFilter(context.Background(), *NewFilterParamsFromTuples("Name", "ABC"), nil)
-//		if err != nil {
-//			panic("Error can't get data")
+//			item, err := persistence.Create(context.Background(), "123", &MyData{Id: "1", Name: "ABC"})
+//			// ...
+//			page, err := persistence.GetPageByFilter(context.Background(), *NewFilterParamsFromTuples("Name", "ABC"), nil)
+//			if err != nil {
+//				panic("Error can't get data")
+//			}
+//			data := page.Data
+//			fmt.Println(data) // Result: { Id: "1", Name: "ABC" }
+//			item, err = persistence.DeleteById(context.Background(), "123", "1")
+//			// ...
 //		}
-//		_data, _ := page.Data()
-//		fmt.Println(_data) // Result: { Id: "1", Name: "ABC" }
-//		item, err := persistence.DeleteById(context.Background(), "123", "1")
-//		...
+//
+//		func (c *MyData) Clone() *MyData {
+//			return &MyData{Id: c.Id, Name: c.Name}
+//		}
+//
+//		type MyData struct {
+//			Id   string
+//			Name string
+//		}
 //
 //	Extends: MemoryPersistence
 //	Implements: IConfigurable, IWriter, IGetter, ISetter

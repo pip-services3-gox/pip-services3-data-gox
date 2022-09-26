@@ -18,12 +18,12 @@ import (
 //	Typed params:
 //		- T any type
 //	Example:
-//		persister := NewJsonFilePersister[MyData]("./data/data.json");
-//		err := persister.Save(context.Background(), "123", ["A", "B", "C"])
+//		persister := NewJsonFilePersister[MyData]("./data/data.json")
+//		err := persister.Save(context.Background(), "123", []string{"A", "B", "C"})
 //		if err == nil {
 //			items, err := persister.Load("123")
 //			if err == nil {
-//				fmt.Println(items);// Result: ["A", "B", "C"]
+//				fmt.Println(items) // Result: ["A", "B", "C"]
 //			}
 //		}
 //	Implements: ILoader, ISaver, IConfigurable

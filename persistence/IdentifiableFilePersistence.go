@@ -38,42 +38,54 @@ import (
 //
 //	Example:
 //		type MyFilePersistence struct {
-//			IdentifiableFilePersistence[MyData, MyId]
+//			*IdentifiableFilePersistence[*MyData, string]
 //		}
-//      func NewMyFilePersistence(path string)(mfp *MyFilePersistence) {
-//  		mfp = MyFilePersistence{}
-//  		mfp.IdentifiableFilePersistence = *NewJsonPersister[MyData](path)
-//  		return mfp
-//      }
-//		func (c *MyFilePersistence) composeFilter(filter cdata.FilterParams)(func (item interface{})bool) {
+//
+//		func NewMyFilePersistence(path string) (mfp *MyFilePersistence) {
+//			mfp = &MyFilePersistence{}
+//			mfp.IdentifiableFilePersistence = NewIdentifiableFilePersistence[*MyData, string](NewJsonFilePersister[*MyData](path))
+//			return mfp
+//		}
+//
+//		func (c *MyFilePersistence) composeFilter(filter cdata.FilterParams) func(item *MyData) bool {
 //			if &filter == nil {
 //				filter = NewFilterParams()
 //			}
-//			name := filter.GetAsNullableString("name");
-//			return func (item MyData) bool {
-//				if name != "" && dummy.Name != name {
-//  				return false
+//			name, _ := filter.GetAsNullableString("name")
+//			return func(item *MyData) bool {
+//				if name != "" && item.Name != name {
+//					return false
 //				}
 //				return true
 //			}
 //		}
+//
 //		func (c *MyFilePersistence) GetPageByFilter(ctx context.Context, correlationId string,
-//			filter FilterParams, paging PagingParams) (page cdata.DataPage[MyData], err error){
-//  			return c.GetPageByFilter(correlationId, c.composeFilter(filter), paging, nil, nil)
+//			filter FilterParams, paging PagingParams) (page cdata.DataPage[MyData], err error) {
+//			return c.GetPageByFilter(correlationId, c.composeFilter(filter), paging, nil, nil)
+//		}
+//
+//		func (c *MyData) Clone() *MyData {
+//			return &MyData{Id: c.Id, Name: c.Name}
+//		}
+//
+//		type MyData struct {
+//			Id   string
+//			Name string
 //		}
 //
 //		persistence := NewMyFilePersistence("./data/data.json")
-//
-//		_, err := persistence.Create(context.Background(), "123", { Id: "1", Name: "ABC" })
-//		if (err != nil) {
-//  		panic()
+//		_, err := persistence.Create(context.Background(), "123", &MyData{Id: "1", Name: "ABC"})
+//		if err != nil {
+//			panic(err)
 //		}
-//      page, err := persistence.GetPageByFilter(context.Background(), "123", *NewFilterParamsFromTuples("Name", "ABC"), nil)
-//      if err != nil {
-//  		panic("Error")
-//  	}
-//		_data, _ := page.Data()
-//      fmt.Println(_data)   // Result: { Id: "1", Name: "ABC" )
+//		page, err := persistence.GetPageByFilter(context.Background(), "123", *NewFilterParamsFromTuples("Name", "ABC"), nil)
+//		if err != nil {
+//			panic("Error")
+//		}
+//		data := page.Data
+//		fmt.Println(data) // Result: { Id: "1", Name: "ABC" )
+//
 type IdentifiableFilePersistence[T any, K any] struct {
 	*IdentifiableMemoryPersistence[T, K]
 	Persister *JsonFilePersister[T]
