@@ -7,7 +7,7 @@ The second kind is so called "identifieable" persistence with works with "identi
 
 The module contains the following packages:
 
-- [Persistence](https://pkg.go.dev/github.com/pip-services3-gox/pip-services3-data-gox/persistence) - in-memory and file persistence components, as well as JSON persister class.
+- **Persistence** - in-memory and file persistence components, as well as JSON persister class.
 
 <a name="links"></a> Quick links:
 
